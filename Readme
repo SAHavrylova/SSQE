@@ -1,1 +1,7 @@
 
+conftest.py - file for save fixtures
+pytest.ini - markers fot tests 
+
+# Command for test:
+pytest -m check // "Start the test that involves checking markers"
+
