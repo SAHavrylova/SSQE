@@ -1,5 +1,11 @@
+# Install for Python:
+pip install pytest
+pip install requests
+pip3 install selenium --user
+pip3 install -U webdriver_manager
 
-conftest.py - file for save fixtures
+# Formed Structure
+conftest.py - file for save fixtures, precondition and postcondition
 pytest.ini - markers fot tests 
 
 # Command for test:
