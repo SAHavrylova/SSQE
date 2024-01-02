@@ -15,3 +15,5 @@ def test_check_the_title_is_correct():
     #Close the browser
     sign_in_epam_page.close()
 
+@pytest.mark.epamui
+def

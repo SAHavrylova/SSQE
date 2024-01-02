@@ -3,11 +3,12 @@ pip install pytest
 pip install requests
 pip3 install selenium --user
 pip3 install -U webdriver_manager
+pip3 install pytest-xdist - for parallel testing
 
 # Formed Structure
 conftest.py - file for save fixtures, precondition and postcondition
 pytest.ini - markers fot tests 
 
 # Command for test:
-pytest -m check // "Start the test that involves checking markers"
-
+pytest -m check // Start the test that involves checking markers
+pytest -n 2 test_example.py // Start the test o 2 browsers

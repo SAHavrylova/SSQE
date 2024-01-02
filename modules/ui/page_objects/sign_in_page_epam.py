@@ -12,3 +12,6 @@ class SignInEpamPage(BasePage):
     
     def check_epam_title(self, exp_title):
         return self.driver.title == exp_title
+
+
+
