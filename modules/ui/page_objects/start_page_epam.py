@@ -13,6 +13,6 @@ class StartEpamPage(BasePage):
     def check_epam_title(self, exp_title):
         return self.driver.title == exp_title
 
-    def switch_elem(self):
-        
-
+    def get_switch_elem(self):
+        switch_element = self.driver.find_element(By.CLASS_NAME, 'theme-switcher')
+        return switch_element
