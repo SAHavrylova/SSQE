@@ -1,3 +1,7 @@
+# Git command
+cat ~/.ssh/id.pub
+ssh-add ~/.ssh/id 
+
 # Install for Python:
 pip install pytest
 pip install requests

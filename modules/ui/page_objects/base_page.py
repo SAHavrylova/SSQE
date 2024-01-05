@@ -8,3 +8,6 @@ class BasePage:
 
     def close(self):
         self.driver.close()
+    
+    def quit_driver(self):
+        self.driver.quit()
