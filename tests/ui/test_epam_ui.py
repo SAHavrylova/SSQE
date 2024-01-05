@@ -1,7 +1,8 @@
 from modules.ui.page_objects.start_page_epam import StartEpamPage
 import pytest
+import time
 
-@pytest.mark.epamui
+@pytest.mark.sa
 def test_check_the_title_is_correct():
     # Create object page
     start_page_epam = StartEpamPage()
@@ -41,7 +42,7 @@ def test_the_ability_to_switch_theme():
 
 
 @pytest.mark.sa
-def test_the_ability_to_switch_theme():
+def test_that_allow_to_change_lang_to_ua():
     # Create object page
     start_page_epam = StartEpamPage()
 
@@ -53,6 +54,10 @@ def test_the_ability_to_switch_theme():
 
     start_page_epam.check_location_title("Select a language")
 
-    start_page_epam.change_language("https://careers.epam.ua/")
+    start_page_epam.change_language()
+
+    time.sleep(5)
+
+    start_page_epam.check_epam_title("EPAM Ukraine - найбільша ІТ-компанія в Україні | Вакансії")
 
     start_page_epam.quit_driver()

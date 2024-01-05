@@ -1,5 +1,7 @@
 from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class StartEpamPage(BasePage):
     URL = "https://www.epam.com/"
@@ -22,17 +24,22 @@ class StartEpamPage(BasePage):
         switch = self.driver.find_element(By.CLASS_NAME, "switcher")
         
     def get_location(self):
-        location = self.driver.find_element(By.CLASS_NAME, "location-selector")
-        location.click()
+        global_language_button = self.driver.find_element(By.CLASS_NAME, 'location-selector__button')
+        global_language_button.click()
 
     def check_location_title(self, location_language_title):
         return self.driver.title == location_language_title
         
         #find UA element on dropdown menu
-    def change_language(self, language):
-        dropdown_location = self.driver.find_element(By.CLASS_NAME, "location-selector__link")
-        language = dropdown_location.get_attribute("href")
-        language.click()
+    def change_language(self):
+        ua_link_location = (By.XPATH, '//a[@class="location-selector__link" and @href="https://careers.epam.ua"]')
+        ua_language = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(ua_link_location)
+        )
+        ua_language.click()
+    
+
+
 
 
 
