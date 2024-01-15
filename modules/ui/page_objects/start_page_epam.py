@@ -35,12 +35,24 @@ class StartEpamPage(BasePage):
         global_language_button = self.driver.find_element(By.CLASS_NAME, 'location-selector__button')
         global_language_button.click()
         
-    def change_language(self):
+    def change_language_to_ua(self):
         ua_link_location = (By.XPATH, '//a[@class="location-selector__link" and @href="https://careers.epam.ua"]')
         ua_language = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable(ua_link_location)
         )
         ua_language.click()
+    
+    def language(self, choose_language):
+        language_items = self.driver.find_element(By.CLASS_NAME, "location-selector__item")
+        language_link = language_items.find_element(By.TAG_NAME, "a")
+        language_text = language_link.text.strip()
+        
+        if language_text == choose_language.lower:
+            WebDriverWait(self.driver, 2).until(EC.element_to_be_clickable((By.TAG_NAME, "a")))
+            language_link.click()
+            return True
+        else:
+            return False
 
     def check_header_title(self, header_expected_text):
         # Locate all top-navigation__item elements
@@ -49,7 +61,7 @@ class StartEpamPage(BasePage):
         # Iterate over each header item
         for header_item in header_items:
             # Find the link within the header item
-            header_link = header_item.find_element(By.CLASS_NAME, 'top-navigation__item-link')
+            header_link = header_item.find_elements(By.CLASS_NAME, 'top-navigation__item-link')
             
             # Get the text of the link
             link_text = header_link.text
@@ -66,20 +78,39 @@ class StartEpamPage(BasePage):
         self.driver.execute_script("arguments[0].scrollIntoView(true);", footer_elem)
     
     def check_footer_title(self, footer_expected_text):
-        # Locate all top-navigation__item elements
-        footer_items = self.driver.find_elements(By.CLASS_NAME, 'policies')
+        footer_items = self.driver.find_element(By.CLASS_NAME, 'policies')
 
-        # Iterate over each footer item
         for footer_item in footer_items:
-            # Find the link within the footer item
             footer_link = footer_item.find_element(By.CLASS_NAME, 'links-item')
-            
-            # Get the text of the link
             link_text = footer_link.text
-            
-            # Check if the link text matches the expected text
             if link_text == footer_expected_text:
-                return True  # Return True if a match is found
+                return True  
+        return False
+    
+    def go_to_our_locations(self):
+        locations_elem = self.driver.find_element(By.CLASS_NAME, "text")
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", locations_elem)
+    
+    def check_locations_title(self):
+        tabs = ["AMERICAS", "EMEA", "APAC"]
 
-        # If no match is found, print a message and return False
-        return False 
+        for tab_name in tabs:
+            tab_xpath = f'//a[@class="tabs-23__link" and text()="{tab_name}"]'
+
+            try:
+                tab_element = WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located((By.XPATH, tab_xpath))
+                )
+            except:
+                return False
+        
+        return True
+
+    def click_location(self, choose_location):
+        location_xpath = f"//a[text()='{choose_location}']"
+        location_element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, location_xpath)))
+        location_element.click()
+        
+        
+
+        

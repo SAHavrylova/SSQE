@@ -1,14 +1,12 @@
 import pytest
-from modules.api.clients.swagger import Swagger
+from modules.api.clients.petstore import Petstore
+
 
 @pytest.fixture
 def base_user_url():
-    return "https://petstore.swagger.io/#/user"
+    return "https://petstore.swagger.io/v2"
 
 @pytest.fixture
-def valid_user_credentials():
-    return {
-        "username": "Svitlana", 
-        "password": "Havrylova"
-        }
+def petstore(base_user_url):
+    return Petstore(base_user_url)
     

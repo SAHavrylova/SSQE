@@ -43,7 +43,7 @@ def test_that_allow_to_change_lang_to_ua():
     #Find location and open
     start_page_epam.get_lang_location()
 
-    start_page_epam.change_language()
+    start_page_epam.change_language_to_ua()
 
     assert start_page_epam.check_epam_title("EPAM Ukraine - найбільша ІТ-компанія в Україні | Вакансії", timeout = 5)
     
@@ -76,15 +76,16 @@ def test_check_the_policies_list():
 
     start_page_epam.quit_driver()
 
-@pytest.mark.sa
-def test_that_allow_to_change_lang_to_ua():
+@pytest.mark.epamui
+def test_that_allow_to_switch_location_list_by_region():
     # Create object page
     start_page_epam = StartEpamPage()
 
     #Open page epam.com
     start_page_epam.go_to_epam()
+    start_page_epam.go_to_our_locations()
+    start_page_epam.check_locations_title()
+    start_page_epam.click_location("EMEA")
 
-    #Find location and open
-    start_page_epam.get_lang_location()
     
     start_page_epam.quit_driver()
