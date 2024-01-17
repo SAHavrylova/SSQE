@@ -20,7 +20,7 @@ def test_create_user(petstore):
     assert response.json()["type"] == "unknown"
     assert response.json()["message"] == str(user_data["id"])
 
-@pytest.mark.sa
+@pytest.mark.api
 def test_get_existing_user(petstore):
     existing_username = "user1"
 

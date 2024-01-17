@@ -2,6 +2,7 @@ from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
 
 class StartEpamPage(BasePage):
     URL = "https://www.epam.com/"
@@ -16,21 +17,29 @@ class StartEpamPage(BasePage):
         wait = WebDriverWait(self.driver, timeout_seconds)
         wait.until(lambda driver: True)
     
+    def wait_for_page_load(self, timeout_seconds = 10):
+        WebDriverWait(self.driver, timeout_seconds).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body")))
+    
     def check_epam_title(self, exp_title, timeout = 3):
         WebDriverWait(self.driver, timeout).until(
             EC.title_is(exp_title)
         )
         return self.driver.title == exp_title
 
-    def get_theme(self):
-        site_theme = self.driver.find_element(By.CLASS_NAME, 'fonts-loaded')
-        classes = site_theme.get_attribute("class")
-        return "dark-mode" if "dark-mode" in classes else "light-mode"
+    def get_current_theme(self):
+        current_theme = self.driver.find_element(By.CLASS_NAME, 'fonts-loaded')
+        theme = current_theme.get_attribute("class")
+        return "dark-mode" if "dark-mode" in theme else "light-mode"
+    
+    def theme_switcher(self):
+        switcher = self.driver.find_element(By.CSS_SELECTOR, ".theme-switcher")
+        '''print("Element Text:", switcher.text)
+        print("Element Displayed:", switcher.is_displayed())
+        print("Element Enabled:", switcher.is_enabled())
+        switcher.click()'''
+        self.driver.execute_script("arguments[0].click();", switcher)
 
-    def toogle_switch_elem(self):
-        theme_switcher = self.driver.find_element(By.CLASS_NAME, 'switch')
-        theme_switcher.click()
-        
     def get_lang_location(self):
         global_language_button = self.driver.find_element(By.CLASS_NAME, 'location-selector__button')
         global_language_button.click()
@@ -61,7 +70,7 @@ class StartEpamPage(BasePage):
         # Iterate over each header item
         for header_item in header_items:
             # Find the link within the header item
-            header_link = header_item.find_elements(By.CLASS_NAME, 'top-navigation__item-link')
+            header_link = header_item.find_element(By.CLASS_NAME, 'top-navigation__item-link')
             
             # Get the text of the link
             link_text = header_link.text
@@ -78,7 +87,7 @@ class StartEpamPage(BasePage):
         self.driver.execute_script("arguments[0].scrollIntoView(true);", footer_elem)
     
     def check_footer_title(self, footer_expected_text):
-        footer_items = self.driver.find_element(By.CLASS_NAME, 'policies')
+        footer_items = self.driver.find_elements(By.CLASS_NAME, 'policies')
 
         for footer_item in footer_items:
             footer_link = footer_item.find_element(By.CLASS_NAME, 'links-item')

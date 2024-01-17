@@ -16,18 +16,18 @@ def test_check_the_title_is_correct():
     #Close the browser
     start_page_epam.close()
 
-@pytest.mark.epamui
+@pytest.mark.sa
 def test_the_ability_to_switch_theme():
     # Create object page
     start_page_epam = StartEpamPage()
 
     #Open page epam.com
     start_page_epam.go_to_epam()
-
-    start_page_epam.get_theme()
-
-    start_page_epam.toogle_switch_elem()
-
+    initial_theme = start_page_epam.get_current_theme()
+    start_page_epam.theme_switcher()
+    switched_theme = start_page_epam.get_current_theme()
+    assert initial_theme != switched_theme, "Theme did not switch successfully"
+    
     # Close the browser
     start_page_epam.quit_driver()
 

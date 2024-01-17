@@ -9,4 +9,5 @@ def base_user_url():
 @pytest.fixture
 def petstore(base_user_url):
     return Petstore(base_user_url)
+
     
