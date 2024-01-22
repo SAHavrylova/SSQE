@@ -16,7 +16,7 @@ def test_check_the_title_is_correct():
     #Close the browser
     start_page_epam.close()
 
-@pytest.mark.sa
+@pytest.mark.epamui
 def test_the_ability_to_switch_theme():
     # Create object page
     start_page_epam = StartEpamPage()
@@ -41,7 +41,7 @@ def test_that_allow_to_change_lang_to_ua():
     start_page_epam.go_to_epam()
 
     #Find location and open
-    start_page_epam.get_lang_location()
+    start_page_epam.get_language()
 
     start_page_epam.change_language_to_ua()
 
@@ -76,16 +76,16 @@ def test_check_the_policies_list():
 
     start_page_epam.quit_driver()
 
-@pytest.mark.epamui
+@pytest.mark.sa
 def test_that_allow_to_switch_location_list_by_region():
     # Create object page
     start_page_epam = StartEpamPage()
 
     #Open page epam.com
     start_page_epam.go_to_epam()
-    start_page_epam.go_to_our_locations()
+    start_page_epam.scroll_to_our_locations()
     start_page_epam.check_locations_title()
-    start_page_epam.click_location("EMEA")
+    start_page_epam.click_locations("APAC")
+    time.sleep(4)
 
-    
     start_page_epam.quit_driver()

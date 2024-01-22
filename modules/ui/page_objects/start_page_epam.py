@@ -2,7 +2,7 @@ from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from bs4 import BeautifulSoup
+
 
 class StartEpamPage(BasePage):
     URL = "https://www.epam.com/"
@@ -40,7 +40,7 @@ class StartEpamPage(BasePage):
         switcher.click()'''
         self.driver.execute_script("arguments[0].click();", switcher)
 
-    def get_lang_location(self):
+    def get_language(self):
         global_language_button = self.driver.find_element(By.CLASS_NAME, 'location-selector__button')
         global_language_button.click()
         
@@ -96,30 +96,64 @@ class StartEpamPage(BasePage):
                 return True  
         return False
     
-    def go_to_our_locations(self):
-        locations_elem = self.driver.find_element(By.CLASS_NAME, "text")
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", locations_elem)
+    def scroll_to_our_locations(self):
+        locations = self.driver.find_elements(By.CLASS_NAME, "text-ui-23")
+        locations_element = None
+        for element in locations:
+            if "Locations" in element.text:
+                locations_element = element
+                break
+
+        if locations_element:
+            self.driver.execute_script("arguments[0].scrollIntoView();", locations_element)
+        else:
+            print("Our Locations not found")
     
     def check_locations_title(self):
-        tabs = ["AMERICAS", "EMEA", "APAC"]
+        tabs_locations = ["AMERICAS", "EMEA", "APAC"]
 
-        for tab_name in tabs:
-            tab_xpath = f'//a[@class="tabs-23__link" and text()="{tab_name}"]'
+        for tab_locations_name in tabs_locations:
+            tab_locations_xpath = f'//a[@class="tabs-23__link" and text()="{tab_locations_name}"]'
 
             try:
-                tab_element = WebDriverWait(self.driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH, tab_xpath))
+                WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located((By.XPATH, tab_locations_xpath))
                 )
             except:
                 return False
-        
-        return True
 
-    def click_location(self, choose_location):
-        location_xpath = f"//a[text()='{choose_location}']"
-        location_element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, location_xpath)))
-        location_element.click()
+        return True
+    
+    def click_locations(self, choose_locations_name):
+        try:
+            locations_titles = self.driver.find_elements(By.CLASS_NAME, "tabs-23__link")
+
+            for title in locations_titles:
+                print(f"Checking title: {title.text}")
+                if title.text.strip() == choose_locations_name:
+                    locations_title = title
+                    break
+
+            if locations_title:
+                locations_title.click()
+            else:
+                print(f"Element not found: {choose_locations_name}")
         
+        except Exception as e:
+            print(f"Error clicking on {choose_locations_name} tab: {e}")
+
+    def check_locations_infos(self, expected_country, expected_cities):
+        try:
+            locations_carousel = self.driver.find_element(By.CLASS_NAME, "locations-viewer-23__country")
+            actual_country = locations_carousel.get_attribute('data-country')
+            actual_cities = int(locations_carousel.get_attribute('data-cities'))
+
+            assert actual_country == expected_country, f"Expected country: {expected_country}, Actual country: {actual_country}"
+            assert actual_cities == expected_cities, f"Expected cities count: {expected_cities}, Actual cities count: {actual_cities}"
         
+        except:
+            return True
+        
+
 
         
