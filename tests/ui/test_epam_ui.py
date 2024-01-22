@@ -87,5 +87,7 @@ def test_that_allow_to_switch_location_list_by_region():
     start_page_epam.check_locations_title()
     start_page_epam.click_locations("APAC")
     time.sleep(4)
+    start_page_epam.check_locations_infos("australia", 2)
+    start_page_epam.check_locations_infos("india", 5)
 
     start_page_epam.quit_driver()

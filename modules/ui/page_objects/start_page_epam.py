@@ -144,7 +144,7 @@ class StartEpamPage(BasePage):
 
     def check_locations_infos(self, expected_country, expected_cities):
         try:
-            locations_carousel = self.driver.find_element(By.CLASS_NAME, "locations-viewer-23__country")
+            locations_carousel = self.driver.find_element(By.CSS_SELECTOR, '.tabs-23__item.js-tabs-item.active')
             actual_country = locations_carousel.get_attribute('data-country')
             actual_cities = int(locations_carousel.get_attribute('data-cities'))
 
@@ -153,7 +153,3 @@ class StartEpamPage(BasePage):
         
         except:
             return True
-        
-
-
-        
