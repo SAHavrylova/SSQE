@@ -49,7 +49,7 @@ class StartEpamPage(BasePage):
         
     def change_language_to_ua(self):
         ua_language = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable(*self.ua_language_locator)
+            EC.element_to_be_clickable(self.ua_language_locator)
         )
         ua_language.click()
     
