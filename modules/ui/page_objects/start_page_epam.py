@@ -6,6 +6,13 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class StartEpamPage(BasePage):
     URL = "https://www.epam.com/"
+    current_theme_locator = (By.CLASS_NAME, 'fonts-loaded')
+    theme_switcher_locator = (By.CSS_SELECTOR, ".theme-switcher")
+    language_button_locator = (By.CLASS_NAME, 'location-selector__button')
+    ua_language_locator = (By.XPATH, '//a[@class="location-selector__link" and @href="https://careers.epam.ua"]')
+    footer_locator = (By.CLASS_NAME, "footer-container")
+    footer_title_locator = (By.CLASS_NAME, 'policies')
+    our_locations_locator = (By.CLASS_NAME, "text-ui-23")
 
     def __init__(self) -> None:
         super().__init__()
@@ -28,26 +35,21 @@ class StartEpamPage(BasePage):
         return self.driver.title == exp_title
 
     def get_current_theme(self):
-        current_theme = self.driver.find_element(By.CLASS_NAME, 'fonts-loaded')
+        current_theme = self.driver.find_element(*self.current_theme_locator)
         theme = current_theme.get_attribute("class")
         return "dark-mode" if "dark-mode" in theme else "light-mode"
     
     def theme_switcher(self):
-        switcher = self.driver.find_element(By.CSS_SELECTOR, ".theme-switcher")
-        '''print("Element Text:", switcher.text)
-        print("Element Displayed:", switcher.is_displayed())
-        print("Element Enabled:", switcher.is_enabled())
-        switcher.click()'''
+        switcher = self.driver.find_element(*self.theme_switcher_locator)
         self.driver.execute_script("arguments[0].click();", switcher)
 
     def get_language(self):
-        global_language_button = self.driver.find_element(By.CLASS_NAME, 'location-selector__button')
+        global_language_button = self.driver.find_element(*self.language_button_locator)
         global_language_button.click()
         
     def change_language_to_ua(self):
-        ua_link_location = (By.XPATH, '//a[@class="location-selector__link" and @href="https://careers.epam.ua"]')
         ua_language = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable(ua_link_location)
+            EC.element_to_be_clickable(*self.ua_language_locator)
         )
         ua_language.click()
     
@@ -64,30 +66,22 @@ class StartEpamPage(BasePage):
             return False
 
     def check_header_title(self, header_expected_text):
-        # Locate all top-navigation__item elements
-        header_items = self.driver.find_elements(By.CLASS_NAME, 'top-navigation__item')
-
-        # Iterate over each header item
-        for header_item in header_items:
-            # Find the link within the header item
-            header_link = header_item.find_element(By.CLASS_NAME, 'top-navigation__item-link')
-            
-            # Get the text of the link
-            link_text = header_link.text
-            
-            # Check if the link text matches the expected text
-            if link_text == header_expected_text:
+        
+        header_items = self.driver.find_elements(By.CLASS_NAME, 'top-navigation__item') # Locate all top-navigation__item elements
+        for header_item in header_items: # Iterate over each header item           
+            header_link = header_item.find_element(By.CLASS_NAME, 'top-navigation__item-link') # Find the link within the header item
+            link_text = header_link.text # Get the text of the link
+            if link_text == header_expected_text: # Check if the link text matches the expected text
                 return True  # Return True if a match is found
-
-        # If no match is found, print a message and return False
-        return False
+        
+        return False # If no match is found, print a message and return False
     
     def go_to_footer(self):
-        footer_elem = self.driver.find_element(By.CLASS_NAME, "footer-container")
+        footer_elem = self.driver.find_element(*self.footer_locator)
         self.driver.execute_script("arguments[0].scrollIntoView(true);", footer_elem)
     
     def check_footer_title(self, footer_expected_text):
-        footer_items = self.driver.find_elements(By.CLASS_NAME, 'policies')
+        footer_items = self.driver.find_elements(*self.footer_title_locator)
 
         for footer_item in footer_items:
             footer_link = footer_item.find_element(By.CLASS_NAME, 'links-item')
@@ -97,7 +91,7 @@ class StartEpamPage(BasePage):
         return False
     
     def scroll_to_our_locations(self):
-        locations = self.driver.find_elements(By.CLASS_NAME, "text-ui-23")
+        locations = self.driver.find_elements(*self.our_locations_locator)
         locations_element = None
         for element in locations:
             if "Locations" in element.text:

@@ -1,9 +1,10 @@
 # Excluding Python test files
-__pycache__/
+__pycache__
 *.pyc
 *.pyo
 *.pyd
 .pytest_cache
+.vscode
 
 
 venv/

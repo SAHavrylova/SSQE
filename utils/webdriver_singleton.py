@@ -12,7 +12,7 @@ class WebDriverSingleton:
             cls._instance = super(WebDriverSingleton, cls).__new__(cls)
             if browser.lower() == "chrome":
                 cls._instance.driver = cls._init_chrome_driver()
-            elif browser.lover() == "firefox":
+            elif browser.lower() == "firefox":
                 cls._instance.driver = cls._init_firefox_driver()
             else:
                 raise ValueError(f"Unsupported browser: {browser}")
@@ -33,3 +33,9 @@ class WebDriverSingleton:
 
     def quit_driver(self):
         self.driver.quit()
+    
+    @classmethod
+    def _destroy_instance(cls):
+        if cls._instance is not None:
+            cls._instance.quit_driver()
+            cls._instance = None
