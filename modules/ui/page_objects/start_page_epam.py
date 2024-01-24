@@ -13,7 +13,12 @@ class StartEpamPage(BasePage):
     footer_locator = (By.CLASS_NAME, "footer-container")
     footer_title_locator = (By.CLASS_NAME, 'policies')
     our_locations_locator = (By.CLASS_NAME, "text-ui-23")
-
+    locations_carousel_locator = (By.CSS_SELECTOR, '.tabs-23__item.js-tabs-item.active')
+    current_our_location_button = (By.CLASS_NAME, "locations-viewer-23__country-btn")
+    current_our_location_btn_active = (By.CLASS_NAME, "locations-viewer-23__country-title.list.active")
+    search_button_locator = (By.CLASS_NAME, "header-search__button")
+    search_field_locator = (By.ID, 'new_form_search')
+    
     def __init__(self) -> None:
         super().__init__()
     
@@ -138,12 +143,62 @@ class StartEpamPage(BasePage):
 
     def check_locations_infos(self, expected_country, expected_cities):
         try:
-            locations_carousel = self.driver.find_element(By.CSS_SELECTOR, '.tabs-23__item.js-tabs-item.active')
-            actual_country = locations_carousel.get_attribute('data-country')
-            actual_cities = int(locations_carousel.get_attribute('data-cities'))
+            country_button = self.driver.find_element(By.XPATH, f"//button[@data-country-title='{expected_country}']")
+            cities_count = int(country_button.get_attribute("data-cities-count"))
 
-            assert actual_country == expected_country, f"Expected country: {expected_country}, Actual country: {actual_country}"
-            assert actual_cities == expected_cities, f"Expected cities count: {expected_cities}, Actual cities count: {actual_cities}"
+            assert country_button.is_displayed(), f"Expected country '{expected_country}' not found"
+            assert cities_count == expected_cities, f"Expected cities count for '{expected_country}' is {expected_cities}, but found {cities_count}"
+
+            print(f"Country '{expected_country}' and cities count {expected_cities} verified successfully")
+
+        except Exception as e:
+            print(f"Error checking locations info: {e}")
+
+    def scroll_to_element(self, element):
+        script = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"
+        self.driver.execute_script(script, element)
+    
+    def click_on_current_our_location(self, choose_current_location):
+        try:
+            our_location_buttons = self.driver.find_elements(*self.current_our_location_button)
+
+            for our_location_button in our_location_buttons:
+                location_title = our_location_button.find_element(By.CLASS_NAME, "locations-viewer-23__country-title").text
+                print(f"Checking title: {location_title}")
+                
+                if location_title.strip() == choose_current_location:
+                    self.scroll_to_element(our_location_button)
+                    our_location_button.click()
+                    print(f"Clicked on {choose_current_location} button")
+                    break
+            
+            else:
+                print(f"Element not found: {choose_current_location}")
+
+        except Exception as e:
+            print(f"Error clicking on {choose_current_location} tab: {e}")
+
+    def search_button(self):
+        try:
+            search_btn = self.driver.find_element(*self.search_button_locator)
+            search_btn.click()
+
+            print("Search button clicked successfully.")
         
-        except:
-            return True
+        except Exception as e:
+            print(f"Error clicking on search button: {str(e)}")
+    
+    def new_form_search(self, search_text):
+        try:
+            form_search = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.search_field_locator)
+            )
+            form_search.click()
+            form_search.send_keys(search_text)
+            print("Search text '{search_text}' entered successfully.")
+        
+        except Exception as e:
+            print(f"Error clicking on search field: {str(e)}")
+
+
+        

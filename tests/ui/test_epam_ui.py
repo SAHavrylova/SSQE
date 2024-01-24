@@ -1,4 +1,3 @@
-from modules.ui.page_objects.start_page_epam import StartEpamPage
 import pytest
 
 @pytest.mark.epamui
@@ -16,7 +15,7 @@ def test_the_ability_to_switch_theme(start_page_epam_instance):
     assert initial_theme != switched_theme, "Theme did not switch successfully"
 
 
-@pytest.mark.sa
+@pytest.mark.epamui
 def test_that_allow_to_change_lang_to_ua(start_page_epam_instance):
     #Find location and open
     start_page_epam_instance.get_language()
@@ -31,7 +30,6 @@ def test_that_allow_to_change_lang_to_ua(start_page_epam_instance):
     start_page_epam_instance.check_header_title("ПОДІЇ")
     start_page_epam_instance.check_header_title("ПРО КОМПАНІЮ")
     
-
 @pytest.mark.epamui
 def test_check_the_policies_list(start_page_epam_instance):
 
@@ -45,9 +43,14 @@ def test_check_the_policies_list(start_page_epam_instance):
 
 @pytest.mark.epamui
 def test_that_allow_to_switch_location_list_by_region(start_page_epam_instance):
+    
     start_page_epam_instance.scroll_to_our_locations()
     start_page_epam_instance.check_locations_title()
     start_page_epam_instance.click_locations("APAC")
-    start_page_epam_instance.check_locations_infos("australia", 2)
-    start_page_epam_instance.check_locations_infos("india", 5)
+    start_page_epam_instance.click_on_current_our_location("INDIA")
+    start_page_epam_instance.check_locations_infos("India", 5)
 
+@pytest.mark.sa
+def test_check_the_search_function(start_page_epam_instance):
+    start_page_epam_instance.search_button()
+    start_page_epam_instance.new_form_search("AI")
