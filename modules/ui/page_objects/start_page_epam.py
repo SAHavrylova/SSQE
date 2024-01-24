@@ -18,7 +18,9 @@ class StartEpamPage(BasePage):
     current_our_location_btn_active = (By.CLASS_NAME, "locations-viewer-23__country-title.list.active")
     search_button_locator = (By.CLASS_NAME, "header-search__button")
     search_field_locator = (By.ID, 'new_form_search')
-    
+    find_button_locator = (By.XPATH, "//span[@class='bth-text-layer' and contains(text(), 'Find')]")
+    result_count_locator = (By.CLASS_NAME, 'search-results__counter')
+
     def __init__(self) -> None:
         super().__init__()
     
@@ -127,6 +129,8 @@ class StartEpamPage(BasePage):
         try:
             locations_titles = self.driver.find_elements(By.CLASS_NAME, "tabs-23__link")
 
+            locations_title = None
+
             for title in locations_titles:
                 print(f"Checking title: {title.text}")
                 if title.text.strip() == choose_locations_name:
@@ -135,9 +139,15 @@ class StartEpamPage(BasePage):
 
             if locations_title:
                 locations_title.click()
+
+                # Wait for the element to become active
+                WebDriverWait(self.driver, 10).until(
+                    EC.element_to_be_clickable((By.XPATH, f"//a[text()='{choose_locations_name}'][@class='tabs-23__link js-tabs-link active']"))
+                )
+                print(f"Clicked on {choose_locations_name} tab, and it is now active.")
             else:
                 print(f"Element not found: {choose_locations_name}")
-        
+
         except Exception as e:
             print(f"Error clicking on {choose_locations_name} tab: {e}")
 
@@ -178,7 +188,7 @@ class StartEpamPage(BasePage):
         except Exception as e:
             print(f"Error clicking on {choose_current_location} tab: {e}")
 
-    def search_button(self):
+    def click_search_button(self):
         try:
             search_btn = self.driver.find_element(*self.search_button_locator)
             search_btn.click()
@@ -195,10 +205,41 @@ class StartEpamPage(BasePage):
             )
             form_search.click()
             form_search.send_keys(search_text)
-            print("Search text '{search_text}' entered successfully.")
+            print("Search text {search_text} entered successfully.")
         
         except Exception as e:
             print(f"Error clicking on search field: {str(e)}")
+    
+    def click_find_button(self):
+        try:
+            find_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.find_button_locator)
+            )
+            find_button.click()
+            print("Find button clicked successfully.")
+        
+        except Exception as e:
+            print(f"Error clicking on Find button: {str(e)}")
+    
+    def get_result_count_locator(self):
+        return (By.CLASS_NAME, 'search-results__counter')
+        
+    def check_search_result(self):
+        try:
+            result_count_element = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located(self.get_result_count_locator())
+            )
+            result_count_text = result_count_element.text
+
+            result_count = int(result_count_text.split()[0])
+
+            if result_count > 0:
+                print(f"Search returned {result_count} results.")
+            else:
+                print("No result found")
+        
+        except Exception as e:
+            print(f"Error checking search results: {str(e)}")
 
 
         

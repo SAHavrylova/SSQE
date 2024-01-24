@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.mark.epamui
 def test_check_the_title_is_correct(start_page_epam_instance):
     #Compare the title
@@ -46,11 +47,16 @@ def test_that_allow_to_switch_location_list_by_region(start_page_epam_instance):
     
     start_page_epam_instance.scroll_to_our_locations()
     start_page_epam_instance.check_locations_title()
+    start_page_epam_instance.click_locations("EMEA")
     start_page_epam_instance.click_locations("APAC")
     start_page_epam_instance.click_on_current_our_location("INDIA")
     start_page_epam_instance.check_locations_infos("India", 5)
 
 @pytest.mark.sa
 def test_check_the_search_function(start_page_epam_instance):
-    start_page_epam_instance.search_button()
+    start_page_epam_instance.click_search_button()
     start_page_epam_instance.new_form_search("AI")
+    start_page_epam_instance.click_find_button()
+    start_page_epam_instance.get_result_count_locator()
+    start_page_epam_instance.check_search_result()
+
