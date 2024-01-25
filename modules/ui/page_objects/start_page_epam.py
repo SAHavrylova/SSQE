@@ -60,8 +60,7 @@ class StartEpamPage(BasePage):
         
         except Exception as e:
             print(f"Error returning title: {(e)}")
-            
-        
+             
     def get_current_theme(self):
         current_theme = self.driver.find_element(*self.current_theme_locator)
         theme = current_theme.get_attribute("class")

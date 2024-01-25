@@ -1,7 +1,6 @@
 import pytest
 from modules.ui.page_objects.start_page_epam import StartEpamPage
 import time
-import os
 
 
 @pytest.mark.epamui
@@ -26,7 +25,7 @@ def test_that_allow_to_change_lang_to_ua(start_page_epam_instance):
 
     start_page_epam_instance.change_language_to_ua()
 
-    assert start_page_epam_instance.check_epam_title("EPAM Ukraine - найбільша ІТ-компанія в Україні | Вакансії", timeout = 5)
+    assert start_page_epam_instance.check_epam_title("EPAM Ukraine - найбільша ІТ-компанія в Україні | Вакансії")
     
     start_page_epam_instance.check_header_title("ВАКАНСІЇ")
     start_page_epam_instance.check_header_title("НАВЧАННЯ")
@@ -86,7 +85,7 @@ def test_that_logo_lead_to_main():
     about.click_on_logo()
     about.check_epam_title("EPAM | Software Engineering & Product Development Services")
 
-@pytest.mark.sa
+@pytest.mark.epamui
 def test_that_allows_to_download_report():
     about = StartEpamPage()
     about.go_to_about()
