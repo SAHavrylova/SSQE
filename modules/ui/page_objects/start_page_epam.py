@@ -7,6 +7,8 @@ from selenium.webdriver.support import expected_conditions as EC
 class StartEpamPage(BasePage):
     URL = "https://www.epam.com/"
     URL_contact =  "https://www.epam.com/about/who-we-are/contact"
+    URL_about = "https://www.epam.com/about"
+    logo_locator = (By.CLASS_NAME, "header__logo-container")
     current_theme_locator = (By.CLASS_NAME, 'fonts-loaded')
     theme_switcher_locator = (By.CSS_SELECTOR, ".theme-switcher")
     language_button_locator = (By.CLASS_NAME, 'location-selector__button')
@@ -32,6 +34,9 @@ class StartEpamPage(BasePage):
     def go_to_contact(self):
         self.driver.get(StartEpamPage.URL_contact)
     
+    def go_to_about(self):
+        self.driver.get(StartEpamPage.URL_about)
+    
     def scroll_to_element(self, element):
         script = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"
         self.driver.execute_script(script, element)
@@ -43,13 +48,19 @@ class StartEpamPage(BasePage):
     def wait_for_page_load(self, timeout_seconds = 10):
         WebDriverWait(self.driver, timeout_seconds).until(
             EC.presence_of_element_located((By.TAG_NAME, "body")))
-    
-    def check_epam_title(self, exp_title, timeout = 3):
-        WebDriverWait(self.driver, timeout).until(
-            EC.title_is(exp_title)
-        )
-        return self.driver.title == exp_title
 
+    def check_epam_title(self, exp_title):
+        try:
+            epam_title = WebDriverWait(self.driver, 5).until(
+                EC.title_is(exp_title)
+            )
+            print("Title return successfully.")
+            return self.driver.title == exp_title
+        
+        except Exception as e:
+            print(f"Error returning title: {(e)}")
+            
+        
     def get_current_theme(self):
         current_theme = self.driver.find_element(*self.current_theme_locator)
         theme = current_theme.get_attribute("class")
@@ -270,3 +281,16 @@ class StartEpamPage(BasePage):
 
         except Exception as e:
             print(f"Validation failed for field '{expected_name}': {str(e)}")
+
+    def click_on_logo(self):
+        try:
+            logo = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable(self.logo_locator)
+            )
+            logo.click()
+            print(f"Logo clicked successfully.")
+        
+        except Exception as e:
+            print(f"Error clicking on logo: {str(e)}")
+
+

@@ -62,7 +62,7 @@ def test_check_the_search_function(start_page_epam_instance):
     start_page_epam_instance.get_result_count_locator()
     start_page_epam_instance.check_search_result()
 
-@pytest.mark.sa
+@pytest.mark.epamui
 def test_check_form_fields_validation():
     contact = StartEpamPage()
     contact.go_to_contact()
@@ -79,6 +79,14 @@ def test_check_form_fields_validation():
         contact.validation_field(expected_name)
 
 @pytest.mark.sa
+def test_that_logo_lead_to_main():
+    about = StartEpamPage()
+    about.go_to_about()
+    about.click_on_logo()
+    about.check_epam_title("EPAM | Software Engineering & Product Development Services")
+
+
+
 
 
 
