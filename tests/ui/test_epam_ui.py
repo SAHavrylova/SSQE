@@ -1,6 +1,7 @@
 import pytest
 from modules.ui.page_objects.start_page_epam import StartEpamPage
 import time
+import os
 
 
 @pytest.mark.epamui
@@ -78,15 +79,18 @@ def test_check_form_fields_validation():
     for expected_name in fields_to_validate:
         contact.validation_field(expected_name)
 
-@pytest.mark.sa
+@pytest.mark.epamui
 def test_that_logo_lead_to_main():
     about = StartEpamPage()
     about.go_to_about()
     about.click_on_logo()
     about.check_epam_title("EPAM | Software Engineering & Product Development Services")
 
-
-
-
-
-
+@pytest.mark.sa
+def test_that_allows_to_download_report():
+    about = StartEpamPage()
+    about.go_to_about()
+    about.scroll_to("a Glance")
+    about.click_on_button("DOWNLOAD")
+    time.sleep(4)
+    about.download_file()

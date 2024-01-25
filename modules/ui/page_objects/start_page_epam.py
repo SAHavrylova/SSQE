@@ -2,7 +2,7 @@ from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+import os
 
 class StartEpamPage(BasePage):
     URL = "https://www.epam.com/"
@@ -15,7 +15,7 @@ class StartEpamPage(BasePage):
     ua_language_locator = (By.XPATH, '//a[@class="location-selector__link" and @href="https://careers.epam.ua"]')
     footer_locator = (By.CLASS_NAME, "footer-container")
     footer_title_locator = (By.CLASS_NAME, 'policies')
-    our_locations_locator = (By.CLASS_NAME, "text-ui-23")
+    scroll_to_locator = (By.CLASS_NAME, "text-ui-23")
     locations_carousel_locator = (By.CSS_SELECTOR, '.tabs-23__item.js-tabs-item.active')
     current_our_location_button = (By.CLASS_NAME, "locations-viewer-23__country-btn")
     current_our_location_btn_active = (By.CLASS_NAME, "locations-viewer-23__country-title.list.active")
@@ -24,6 +24,7 @@ class StartEpamPage(BasePage):
     find_button_locator = (By.XPATH, "//span[@class='bth-text-layer' and contains(text(), 'Find')]")
     result_count_locator = (By.CLASS_NAME, 'search-results__counter')
     button_submit_contact_locator = (By.XPATH, "//button[@class='button-ui']")
+    button_locator = (By.CLASS_NAME, "button__content")
 
     def __init__(self) -> None:
         super().__init__()
@@ -118,7 +119,7 @@ class StartEpamPage(BasePage):
         return False
     
     def scroll_to_our_locations(self):
-        locations = self.driver.find_elements(*self.our_locations_locator)
+        locations = self.driver.find_elements(*self.scroll_to_locator)
         locations_element = None
         for element in locations:
             if "Locations" in element.text:
@@ -293,4 +294,42 @@ class StartEpamPage(BasePage):
         except Exception as e:
             print(f"Error clicking on logo: {str(e)}")
 
+    def scroll_to(self, target_text):
+        scroll = self.driver.find_elements(*self.scroll_to_locator)
+        scroll_element = None
 
+        for element in scroll:
+            if target_text in element.text:
+                scroll_element = element
+                break
+        
+        if scroll_element:
+            self.driver.execute_script("arguments[0].scrollIntoView();", scroll_element)
+            print(f"Scrolled to {target_text} element successfully")
+        else:
+            print(f"{target_text} not found")
+    
+    def click_on_button(self, button_name):
+        button = self.driver.find_elements(*self.button_locator)
+        button_element = None
+
+        for btn_element in button:
+            if button_name in btn_element.text:
+                button_element = btn_element
+                break
+        
+        if button_element:
+            button_element.click()
+            print(f"Clicked on {button_name} button successfully")
+        else:
+            print(f"{button_name} not found")
+    
+    def download_file(self):
+        home_dir = os.path.expanduser("~")
+        download_dir = os.path.join(home_dir, "Downloads")
+        print("Way for:", download_dir)
+        
+        downloaded_files = os.listdir(download_dir)
+        expected_file = "EPAM_Corporate_Overview_Q3_october.pdf"
+
+        assert expected_file in downloaded_files, f"File {expected_file} not found in downloads directory"
