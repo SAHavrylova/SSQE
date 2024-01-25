@@ -18,6 +18,9 @@ class StartShopPage(BasePage):
     }
     submit_btn = (By.ID, "register-button")
     signup_result = (By.CLASS_NAME, "result")
+    login_btn = (By.CLASS_NAME, "ico-login")
+    submit_login = (By.CLASS_NAME, "login-button")
+    logout_btn = (By.CLASS_NAME, "ico-logout")
 
 
     def __init__(self) -> None:
@@ -93,3 +96,40 @@ class StartShopPage(BasePage):
         except Exception as e:
             print(f"Error occurred while checking registration result: {e}")
             return False
+
+    def click_on_login(self):
+        try:
+            login = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable(self.login_btn)
+            )
+            login.click()
+        
+        except Exception as e:
+            print(f"Error clicking on login: {str(e)}")
+    
+    def click_on_submit_login(self):
+        try:
+            confirm_login = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable(self.submit_login)
+            )
+            confirm_login.click()
+        
+        except Exception as e:
+            print(f"Error clicking on confirm register: {str(e)}")
+
+    def verify_logout_text(self, expected_text):
+        try:
+            # Знайдіть елемент з текстом "Logout" після логіну
+            logout_element = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located(self.logout_btn)
+            )
+
+            # Отримайте текст елемента
+            actual_text = logout_element.text
+
+            # Порівняйте отриманий текст з очікуваним текстом
+            assert actual_text == expected_text
+            print("Logout text verified successfully.")
+
+        except Exception as e:
+            print(f"Error verifying logout text: {str(e)}") 
