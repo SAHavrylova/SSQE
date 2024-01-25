@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class StartEpamPage(BasePage):
     URL = "https://www.epam.com/"
+    URL_contact =  "https://www.epam.com/about/who-we-are/contact"
     current_theme_locator = (By.CLASS_NAME, 'fonts-loaded')
     theme_switcher_locator = (By.CSS_SELECTOR, ".theme-switcher")
     language_button_locator = (By.CLASS_NAME, 'location-selector__button')
@@ -20,12 +21,20 @@ class StartEpamPage(BasePage):
     search_field_locator = (By.ID, 'new_form_search')
     find_button_locator = (By.XPATH, "//span[@class='bth-text-layer' and contains(text(), 'Find')]")
     result_count_locator = (By.CLASS_NAME, 'search-results__counter')
+    button_submit_contact_locator = (By.XPATH, "//button[@class='button-ui']")
 
     def __init__(self) -> None:
         super().__init__()
     
     def go_to_epam(self):
         self.driver.get(StartEpamPage.URL)
+    
+    def go_to_contact(self):
+        self.driver.get(StartEpamPage.URL_contact)
+    
+    def scroll_to_element(self, element):
+        script = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"
+        self.driver.execute_script(script, element)
     
     def load_page(self, timeout_seconds = 3):
         wait = WebDriverWait(self.driver, timeout_seconds)
@@ -163,10 +172,6 @@ class StartEpamPage(BasePage):
 
         except Exception as e:
             print(f"Error checking locations info: {e}")
-
-    def scroll_to_element(self, element):
-        script = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"
-        self.driver.execute_script(script, element)
     
     def click_on_current_our_location(self, choose_current_location):
         try:
@@ -241,5 +246,27 @@ class StartEpamPage(BasePage):
         except Exception as e:
             print(f"Error checking search results: {str(e)}")
 
+    def scroll_click_submit_button(self):
+        try:
+            submit_btn = self.driver.find_element(*self.button_submit_contact_locator)
+            self.scroll_to_element(submit_btn)
+            submit_btn.click()
 
-        
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")  
+
+    def validation_field(self, expected_name):
+        try:
+            required_label_locator = (By.XPATH, f"//label[contains(text(), '{expected_name}')]")
+            required_label = self.driver.find_element(*required_label_locator)
+
+            input_field_id = required_label.get_attribute("for")
+            input_field = self.driver.find_element(By.ID, input_field_id)
+
+            assert required_label.text.strip() == expected_name.strip()
+
+            assert input_field.get_attribute("aria-required") == "true"
+            print(f"Validation passed for field '{expected_name}': Field is marked as required")
+
+        except Exception as e:
+            print(f"Validation failed for field '{expected_name}': {str(e)}")

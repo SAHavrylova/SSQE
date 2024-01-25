@@ -1,4 +1,6 @@
 import pytest
+from modules.ui.page_objects.start_page_epam import StartEpamPage
+import time
 
 
 @pytest.mark.epamui
@@ -52,11 +54,31 @@ def test_that_allow_to_switch_location_list_by_region(start_page_epam_instance):
     start_page_epam_instance.click_on_current_our_location("INDIA")
     start_page_epam_instance.check_locations_infos("India", 5)
 
-@pytest.mark.sa
+@pytest.mark.epamui
 def test_check_the_search_function(start_page_epam_instance):
     start_page_epam_instance.click_search_button()
     start_page_epam_instance.new_form_search("AI")
     start_page_epam_instance.click_find_button()
     start_page_epam_instance.get_result_count_locator()
     start_page_epam_instance.check_search_result()
+
+@pytest.mark.sa
+def test_check_form_fields_validation():
+    contact = StartEpamPage()
+    contact.go_to_contact()
+    contact.scroll_click_submit_button()
+    fields_to_validate= [
+        ("Select the Reason for Your Inquiry*"),
+        ("Last Name*"),
+        ("First Name*"),
+        ("Email*"),
+        ("Phone*"),
+        ("How did you hear about EPAM?*")
+    ]
+    for expected_name in fields_to_validate:
+        contact.validation_field(expected_name)
+
+@pytest.mark.sa
+
+
 
