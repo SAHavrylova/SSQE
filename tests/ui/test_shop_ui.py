@@ -18,7 +18,7 @@ def test_that_allows_sign_up(start_demoshop_instance):
     start_demoshop_instance.click_on_submit()
     start_demoshop_instance.registration_result("Your registration completed")
 
-@pytest.mark.sa
+@pytest.mark.demoshop
 def test_that_allows_login(start_demoshop_instance):
     start_demoshop_instance.click_on_login()
     with open('generated_emails.txt', 'r') as file:
@@ -28,4 +28,8 @@ def test_that_allows_login(start_demoshop_instance):
     start_demoshop_instance.fill_required_input("Password", "SAnewTest")
     start_demoshop_instance.click_on_submit_login()
     start_demoshop_instance.verify_logout_text("Log out")
-    
+
+@pytest.mark.sa
+def test_verify_that_computers_have_3_subgroups(start_demoshop_instance):
+    start_demoshop_instance.move_to_element()
+    time.sleep(4)

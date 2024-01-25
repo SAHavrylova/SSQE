@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import uuid
+from selenium.webdriver.common.action_chains import ActionChains
 
 class StartShopPage(BasePage):
     URL = "https://demowebshop.tricentis.com/"
@@ -21,7 +22,7 @@ class StartShopPage(BasePage):
     login_btn = (By.CLASS_NAME, "ico-login")
     submit_login = (By.CLASS_NAME, "login-button")
     logout_btn = (By.CLASS_NAME, "ico-logout")
-
+    computers_btn = (By.XPATH, "//a[contains(text(),'Computers')]")
 
     def __init__(self) -> None:
         super().__init__()
@@ -132,4 +133,20 @@ class StartShopPage(BasePage):
             print("Logout text verified successfully.")
 
         except Exception as e:
-            print(f"Error verifying logout text: {str(e)}") 
+            print(f"Error verifying logout text: {str(e)}")
+    
+    def move_to_element(self):
+        computers_element = self.driver.find_element(*self.computers_btn)
+        actions = ActionChains(self.driver)
+        actions.move_to_element(computers_element).perform()
+        sub_groups = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located((By.CLASS_NAME, "sublist"))
+        )
+
+        sub_list = sub_groups.find_elements(By.TAG_NAME, "a")
+        
+        assert len(sub_list) == 3
+        
+        sub_categories = [item.text for item in sub_list]
+        expected_categories = ["Desktops", "Notebooks", "Accessories"]
+        assert sub_categories == expected_categories
