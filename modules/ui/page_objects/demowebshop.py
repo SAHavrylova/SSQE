@@ -30,6 +30,10 @@ class StartShopPage(BasePage):
     product_grid = (By.CLASS_NAME, "product-grid")
     product_items = (By.CLASS_NAME, "item-box")
     product_title = (By.CLASS_NAME, "product-title")
+    display = (By.CLASS_NAME, "product-page-size")
+    display_by = (By.ID, "products-pagesize")
+    display_pager = (By.CLASS_NAME, "pager")
+
 
     def __init__(self) -> None:
         super().__init__()
@@ -208,5 +212,36 @@ class StartShopPage(BasePage):
 
         except Exception as e:
             print("Error while verifying prices by title:", e)
+    
+    def sort_by_dispalays(self, choose_page_size):
+        try:
+            display = self.driver.find_element(*self.display_by)
+            display.click()
 
+            display_list = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable(self.display_by)
+            )
+            select = Select(display_list)
+            select.select_by_visible_text(choose_page_size)
+            return True
+        
+        except Exception as e:
+            print("Error while displaying:", e)
+    
+    def verify_pagination_and_items(self):
+        try:
+            pagination = self.driver.find_elements(*self.display_pager)
+            if pagination:
+                print("Pagination is displayed")
+            else:
+                print("Pagination is not displayed")
 
+            items = self.driver.find_elements(By.CLASS_NAME, "product-item")
+            items_count = len(items)
+            if items_count > 0:
+                print(f"Number of items per page is correct: {items_count}")
+            else:
+                print("No items found on the page")
+
+        except Exception as e:
+            print("Error while verifying pagination and items:", e)

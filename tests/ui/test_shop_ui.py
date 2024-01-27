@@ -34,7 +34,7 @@ def test_that_allows_login(start_demoshop_instance):
 def test_verify_that_computers_have_3_subgroups(start_demoshop_instance):
     start_demoshop_instance.move_to_element()
 
-@pytest.mark.sa
+@pytest.mark.demoshop
 def test_that_allows_sorting_items(start_demoshop_instance):
     start_demoshop_instance.click_on_login()
     with open('generated_emails.txt', 'r') as file:
@@ -51,6 +51,20 @@ def test_that_allows_sorting_items(start_demoshop_instance):
     start_demoshop_instance.verify_by_title()
     start_demoshop_instance.sort_by_option("Name: A to Z")
     start_demoshop_instance.verify_by_title()
+
+@pytest.mark.demoshop
+def test_that_allows_changing_number_on_page(start_demoshop_instance):
+    start_demoshop_instance.click_on_login()
+    with open('generated_emails.txt', 'r') as file:
+        generated_emails = file.readlines()
+    random_email = random.choice(generated_emails).strip()
+    start_demoshop_instance.fill_required_input("Email", random_email)
+    start_demoshop_instance.fill_required_input("Password", "SAnewTest")
+    start_demoshop_instance.click_on_categories("Desktops")
+    start_demoshop_instance.sort_by_dispalays("4")
+    start_demoshop_instance.verify_pagination_and_items()
+    start_demoshop_instance.sort_by_dispalays("12")
+    start_demoshop_instance.verify_pagination_and_items()
 
     
     time.sleep(5)
