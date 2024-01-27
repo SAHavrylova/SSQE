@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import uuid
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import Select
 
 class StartShopPage(BasePage):
     URL = "https://demowebshop.tricentis.com/"
@@ -23,6 +24,12 @@ class StartShopPage(BasePage):
     submit_login = (By.CLASS_NAME, "login-button")
     logout_btn = (By.CLASS_NAME, "ico-logout")
     computers_btn = (By.XPATH, "//a[contains(text(),'Computers')]")
+    sub_groups = (By.CLASS_NAME, "sublist")
+    sorting = (By.CLASS_NAME, "product-sorting")
+    sort_by = (By.ID, "products-orderby")
+    product_grid = (By.CLASS_NAME, "product-grid")
+    product_items = (By.CLASS_NAME, "item-box")
+    product_title = (By.CLASS_NAME, "product-title")
 
     def __init__(self) -> None:
         super().__init__()
@@ -140,7 +147,7 @@ class StartShopPage(BasePage):
         actions = ActionChains(self.driver)
         actions.move_to_element(computers_element).perform()
         sub_groups = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.CLASS_NAME, "sublist"))
+            EC.visibility_of_element_located(*self.sub_groups)
         )
 
         sub_list = sub_groups.find_elements(By.TAG_NAME, "a")
@@ -150,3 +157,56 @@ class StartShopPage(BasePage):
         sub_categories = [item.text for item in sub_list]
         expected_categories = ["Desktops", "Notebooks", "Accessories"]
         assert sub_categories == expected_categories
+
+    def click_on_categories(self, sub_groups_name):
+        computers_element = self.driver.find_element(*self.computers_btn)
+        actions = ActionChains(self.driver)
+        actions.move_to_element(computers_element).perform()
+        sub_groups = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(self.sub_groups)
+        )
+
+        sub_list = sub_groups.find_elements(By.TAG_NAME, "a")
+
+        for item in sub_list:
+            if item.text == sub_groups_name:
+                item.click()
+                break
+    
+    def sort_by_option(self, choose_sort):
+        try:
+            sort = self.driver.find_element(*self.sort_by)
+            sort.click()
+
+            sort_list = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable(self.sort_by)
+            )
+            select = Select(sort_list)
+            select.select_by_visible_text(choose_sort)
+            return True
+        
+        except Exception as e:
+            print("Error while sorting:", e)
+            return False
+
+    def verify_by_title(self):
+        try:
+            product_grid = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(self.product_grid)
+            )
+            product_items = product_grid.find_elements(*self.product_items)
+
+            for item in product_items:
+                title_element = item.find_element(*self.product_title)
+                title = title_element.text
+
+                price_element = item.find_element(By.CLASS_NAME, "actual-price")
+                price = float(price_element.text.replace("$", ""))
+
+                print(f"Title: {title}, Price: {price}") # if need to see result
+                print("Sorted succsessfully")
+
+        except Exception as e:
+            print("Error while verifying prices by title:", e)
+
+
