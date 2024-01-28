@@ -43,5 +43,26 @@ class StartSaucedemo(BasePage):
                 return True
         return False
 
+    def verify_all_products(self):
+        all_products = [
+            "Sauce Labs Backpack",
+            "Sauce Labs Bike Light",
+            "Sauce Labs Bolt T-Shirt",
+            "Sauce Labs Fleece Jacket",
+            "Sauce Labs Onesie",
+            "Test.allTheThings() T-Shirt (Red)"
+        ]
+
+        for products_name in all_products:
+            product_name_xpath = f'//a[@id="title_link"]/div[@class="inventory_item_name" and text()="{products_name}"]'
+
+            try:
+                WebDriverWait(self.driver, 5).until(
+                    EC.presence_of_element_located((By.XPATH, product_name_xpath))
+                )
+            except:
+                return False
+        
+        return True
     
             

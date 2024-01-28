@@ -2,7 +2,7 @@ import pytest
 import time
 import random
 
-@pytest.mark.sa
+@pytest.mark.sauce
 def test_login(start_sauce_instance):
     with open("sauce_username.txt", "r") as file:
         sauce_usernames = file.readlines()
@@ -13,8 +13,9 @@ def test_login(start_sauce_instance):
     start_sauce_instance.click_on_login_button()
     assert start_sauce_instance.verify_header_label("Swag Labs")
 
+@pytest.mark.sa
+def test_check_all_list_of_products(sauce_signin):
+    sauce_signin.verify_all_products()
+
 
     time.sleep(5)
-
-def test_check_all_list_of_products():
-    
