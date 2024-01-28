@@ -23,6 +23,7 @@ class StartShopPage(BasePage):
     login_btn = (By.CLASS_NAME, "ico-login")
     submit_login = (By.CLASS_NAME, "login-button")
     logout_btn = (By.CLASS_NAME, "ico-logout")
+    top_menu = (By.CLASS_NAME, "top-menu")
     computers_btn = (By.XPATH, "//a[contains(text(),'Computers')]")
     sub_groups = (By.CLASS_NAME, "sublist")
     sorting = (By.CLASS_NAME, "product-sorting")
@@ -33,6 +34,7 @@ class StartShopPage(BasePage):
     display = (By.CLASS_NAME, "product-page-size")
     display_by = (By.ID, "products-pagesize")
     display_pager = (By.CLASS_NAME, "pager")
+    add_card_btn = (By.CLASS_NAME, "button-2.product-box-add-to-cart-button")
 
 
     def __init__(self) -> None:
@@ -162,7 +164,18 @@ class StartShopPage(BasePage):
         expected_categories = ["Desktops", "Notebooks", "Accessories"]
         assert sub_categories == expected_categories
 
-    def click_on_categories(self, sub_groups_name):
+    def click_menu_item(self, choose_categories_element):
+        try:
+            category_element = self.driver.find_element(By.XPATH, f'//a[contains(text(),"{choose_categories_element}")]')
+        
+            actions = ActionChains(self.driver)
+            actions.move_to_element(category_element).click().perform()
+            return True
+
+        except Exception as e:
+            print("Error while clicking:", e)
+
+    def click_on_categories_with_sub_groups(self, sub_groups_name):
         computers_element = self.driver.find_element(*self.computers_btn)
         actions = ActionChains(self.driver)
         actions.move_to_element(computers_element).perform()

@@ -13,7 +13,7 @@ def test_that_allows_sign_up(start_demoshop_instance):
     start_demoshop_instance.fill_required_input("Email", generated_email)
     start_demoshop_instance.fill_required_input("Password", "SAnewTest")
     start_demoshop_instance.fill_required_input("ConfirmPassword", "SAnewTest")
-    with open('generated_emails.txt', 'a') as file: #"w" - rewrit "a" - eppend
+    with open('generated_emails.txt', 'a') as file: #"w" - rewrite "a" - eppend
         for email in start_demoshop_instance.generated_emails:
             file.write(email + '\n')
     start_demoshop_instance.click_on_submit()
@@ -42,7 +42,7 @@ def test_that_allows_sorting_items(start_demoshop_instance):
     random_email = random.choice(generated_emails).strip()
     start_demoshop_instance.fill_required_input("Email", random_email)
     start_demoshop_instance.fill_required_input("Password", "SAnewTest")
-    start_demoshop_instance.click_on_categories("Desktops")
+    start_demoshop_instance.click_on_categories_with_sub_groups("Desktops")
     start_demoshop_instance.sort_by_option("Price: Low to High")
     start_demoshop_instance.verify_by_title()
     start_demoshop_instance.sort_by_option("Price: High to Low")
@@ -60,11 +60,21 @@ def test_that_allows_changing_number_on_page(start_demoshop_instance):
     random_email = random.choice(generated_emails).strip()
     start_demoshop_instance.fill_required_input("Email", random_email)
     start_demoshop_instance.fill_required_input("Password", "SAnewTest")
-    start_demoshop_instance.click_on_categories("Desktops")
+    start_demoshop_instance.click_on_categories_with_sub_groups("Desktops")
     start_demoshop_instance.sort_by_dispalays("4")
     start_demoshop_instance.verify_pagination_and_items()
     start_demoshop_instance.sort_by_dispalays("12")
     start_demoshop_instance.verify_pagination_and_items()
 
-    
+@pytest.mark.demoshop
+def test_that_allows_adding_an_item_to_the_card(start_demoshop_instance):
+    start_demoshop_instance.click_on_login()
+    with open('generated_emails.txt', 'r') as file:
+        generated_emails = file.readlines()
+    random_email = random.choice(generated_emails).strip()
+    start_demoshop_instance.fill_required_input("Email", random_email)
+    start_demoshop_instance.fill_required_input("Password", "SAnewTest")
+    start_demoshop_instance.click_menu_item("Books")
+
+
     time.sleep(5)
