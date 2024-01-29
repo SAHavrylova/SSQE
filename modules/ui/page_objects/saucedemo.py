@@ -1,4 +1,3 @@
-import random
 from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -20,6 +19,9 @@ class StartSaucedemo(BasePage):
     inventory_details_price = (By.CLASS_NAME, "inventory_details_price")
     add_to_cart_btn = (By.ID, "add-to-cart-sauce-labs-backpack")
     back_to_products_btn = (By.ID, "back-to-products")
+    shooping_cart = (By.ID, "shopping_cart_container")
+
+    added_items = []
 
     def __init__(self) -> None:
         super().__init__()
@@ -106,4 +108,55 @@ class StartSaucedemo(BasePage):
             back_to.click()
         except Exception as e:
             print(f"An error occurred while clicking on 'Back to products': {str(e)}")
-                
+
+    def add_to_cart(self, item_name):
+        try:
+            inventory_items = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_all_elements_located((By.CLASS_NAME, "inventory_item_description"))
+            )
+
+            for item in inventory_items:
+                name_element = item.find_element(By.CLASS_NAME, 'inventory_item_name')
+                add_button = item.find_element(By.CLASS_NAME, 'btn_inventory')
+                if name_element.text.strip() == item_name:
+                    add_button.click()
+                    print(f"{item_name} added to cart.")
+                    StartSaucedemo.added_items.append(item_name)
+                    break
+            else:
+                print(f"Item '{item_name}' not found in inventory.")
+            
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+    
+    @staticmethod
+    def get_added_items():
+        return StartSaucedemo.added_items
+    
+    def click_on_shooping_cart(self):
+        shooping = self.driver.find_element(*self.shooping_cart)
+        shooping.click()
+    
+    def get_cart_items(self):
+        try:
+            cart_items = self.driver.find_elements(By.CLASS_NAME, 'inventory_item_name')
+            cart_item_names = [item.text for item in cart_items]
+
+            return cart_item_names
+
+        except Exception as e:
+            print(f"An error occurred while getting cart items: {str(e)}")
+            return []
+
+    def verify_items(self):
+        added_items = self.get_added_items()
+        cart_items = self.get_cart_items()
+
+        for item in added_items:
+            assert item in cart_items, f"{item} not found on cart"
+
+        print("All items verify successefully")
+    
+
+            
+        
