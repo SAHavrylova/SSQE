@@ -54,7 +54,7 @@ def test_that_allow_to_switch_location_list_by_region(start_page_epam_instance):
     start_page_epam_instance.click_locations("EMEA")
     start_page_epam_instance.click_locations("APAC")
     start_page_epam_instance.click_on_current_our_location("INDIA")
-    start_page_epam_instance.check_locations_infos("India", 5)
+    start_page_epam_instance.check_locations_info("India", 5)
 
 
 @pytest.mark.epamui

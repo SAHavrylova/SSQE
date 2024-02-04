@@ -52,7 +52,7 @@ class StartEpamPage(BasePage):
             return self.driver.title == exp_title
 
         except Exception as e:
-            print(f"Error returning title: {(e)}")
+            print(f"Error returning title: {e}")
 
     def get_current_theme(self):
         current_theme = self.driver.find_element(*self.current_theme_locator)
@@ -87,11 +87,9 @@ class StartEpamPage(BasePage):
 
     def check_header_title(self, header_expected_text):
 
-        header_items = self.driver.find_elements(By.CLASS_NAME,
-                                                 'top-navigation__item')  # Locate all top-navigation__item elements
+        header_items = self.driver.find_elements(By.CLASS_NAME, 'top-navigation__item')
         for header_item in header_items:  # Iterate over each header item
-            header_link = header_item.find_element(By.CLASS_NAME,
-                                                   'top-navigation__item-link')  # Find the link within the header item
+            header_link = header_item.find_element(By.CLASS_NAME, 'top-navigation__item-link')
             link_text = header_link.text  # Get the text of the link
             if link_text == header_expected_text:  # Check if the link text matches the expected text
                 return True  # Return True if a match is found
@@ -157,8 +155,8 @@ class StartEpamPage(BasePage):
 
                 # Wait for the element to become active
                 WebDriverWait(self.driver, 10).until(
-                    EC.element_to_be_clickable((By.XPATH,
-                                                f"//a[text()='{choose_locations_name}'][@class='tabs-23__link js-tabs-link active']"))
+                    EC.element_to_be_clickable((By.XPATH, f"//a[text()='{choose_locations_name}']"
+                                                          f"[@class='tabs-23__link js-tabs-link active']"))
                 )
                 print(f"Clicked on {choose_locations_name} tab, and it is now active.")
             else:
@@ -167,13 +165,14 @@ class StartEpamPage(BasePage):
         except Exception as e:
             print(f"Error clicking on {choose_locations_name} tab: {e}")
 
-    def check_locations_infos(self, expected_country, expected_cities):
+    def check_locations_info(self, expected_country, expected_cities):
         try:
             country_button = self.driver.find_element(By.XPATH, f"//button[@data-country-title='{expected_country}']")
             cities_count = int(country_button.get_attribute("data-cities-count"))
 
             assert country_button.is_displayed(), f"Expected country '{expected_country}' not found"
-            assert cities_count == expected_cities, f"Expected cities count for '{expected_country}' is {expected_cities}, but found {cities_count}"
+            assert cities_count == expected_cities, (f"Expected cities count for '{expected_country}' "
+                                                     f"is {expected_cities}, but found {cities_count}")
 
             print(f"Country '{expected_country}' and cities count {expected_cities} verified successfully")
 

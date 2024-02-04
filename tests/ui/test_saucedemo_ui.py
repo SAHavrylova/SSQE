@@ -53,6 +53,20 @@ def test_complete_order_process(start_sauce_instance):
     start_sauce_instance.add_to_cart("Sauce Labs Onesie")
     print("Name items:", start_sauce_instance.get_added_items())
     start_sauce_instance.click_on_shopping_cart()
+    start_sauce_instance.verify_items()
+    start_sauce_instance.click_on_checkout_button()
+    assert start_sauce_instance.verify_checkout_information("Checkout: Your Information")
+    start_sauce_instance.enter_username("New1")
+    start_sauce_instance.enter_lastname("Last2")
+    start_sauce_instance.enter_postal_code("123sa456")
+    start_sauce_instance.click_on_continue_button()
+    assert start_sauce_instance.verify_checkout_information("Checkout: Overview")
+    start_sauce_instance.click_on_finish_button()
+    assert start_sauce_instance.verify_checkout_information("Checkout: Complete!")
+
+
+
+
 
 
 @pytest.mark.sauce
@@ -66,7 +80,7 @@ def test_change_sorting_by_name(start_sauce_instance):
     start_sauce_instance.verify_sorted_order_by_name()
 
 
-@pytest.mark.sa
+@pytest.mark.sauce
 def test_change_sorting_by_name(start_sauce_instance):
     start_sauce_instance.click_on_username_field("standard_user")
     start_sauce_instance.click_on_password_field()
@@ -76,6 +90,6 @@ def test_change_sorting_by_name(start_sauce_instance):
     start_sauce_instance.sort_product_by_option("Price (high to low)")
     start_sauce_instance.verify_sorted_order_by_price()
 
-    time.sleep(5)
 
+    time.sleep(5)
 

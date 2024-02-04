@@ -10,7 +10,9 @@ class StartSaucedemo(BasePage):
     URL = "https://www.saucedemo.com/"
     username_field_locator = (By.ID, "user-name")
     password_field_locator = (By.ID, "password")
-    login_btn_locator = (By.ID, "login-button")
+    login_button_locator = (By.ID, "login-button")
+    continue_button_locator = (By.ID, "continue")
+    finish_button_locator = (By.ID, "finish")
     header_item_locator = (By.CLASS_NAME, "header_label")
     header_title_locator = (By.CLASS_NAME, "app_logo")
     inventory_details_container_locator = (By.CLASS_NAME, "inventory_details_container")
@@ -21,13 +23,17 @@ class StartSaucedemo(BasePage):
     add_to_cart_button_locator = (By.ID, "add-to-cart-sauce-labs-backpack")
     back_to_products_button_locator = (By.ID, "back-to-products")
     shopping_cart_locator = (By.ID, "shopping_cart_container")
+    checkout_button_locator = (By.ID, "checkout")
+    checkout_title_locator = (By.CLASS_NAME, "title")
     sorting_button_locator = (By.CLASS_NAME, "select_container")
     sort_options_dropdown_locator = (By.CLASS_NAME, "product_sort_container")
     inventory_list_locator = (By.CLASS_NAME, "inventory_list")
     inventory_item_locator = (By.CLASS_NAME, "inventory_item")
     inventory_name_locator = (By.CLASS_NAME, "inventory_item_name ")
     inventory_item_price_locator = (By.CLASS_NAME, "inventory_item_price")
-
+    first_name_locator = (By.ID, "first-name")
+    last_name_locator = (By.ID, "last-name")
+    postal_code_locator = (By.ID, "postal-code")
 
     added_items = []
 
@@ -48,7 +54,7 @@ class StartSaucedemo(BasePage):
         password_element.send_keys("secret_sauce")
 
     def click_on_login_button(self):
-        login_element = self.driver.find_element(*self.login_btn_locator)
+        login_element = self.driver.find_element(*self.login_button_locator)
         login_element.click()
 
     def verify_header_label(self, exp_header_label_text):
@@ -97,7 +103,7 @@ class StartSaucedemo(BasePage):
             self.driver.find_elements(*self.inventory_details_img_locator)
             self.driver.find_elements(*self.inventory_details_name_locator)
             self.driver.find_elements(*self.inventory_details_description_locator)
-            self.driver.find_elements(*self.inventory_details_price)
+            self.driver.find_elements(*self.inventory_details_price_locator)
             self.driver.find_elements(*self.add_to_cart_button_locator)
         except:
             elements_present = False
@@ -161,6 +167,36 @@ class StartSaucedemo(BasePage):
 
         print("All items verify successfully")
 
+    def click_on_checkout_button(self):
+        self.click_element(self.checkout_button_locator)
+
+    def verify_checkout_information(self, checkout_info_text):
+        try:
+            checkout_text_element = self.wait_until(EC.visibility_of_element_located(self.checkout_title_locator))
+            checkout_text = checkout_text_element.text
+            return checkout_text == checkout_info_text
+        except Exception as e:
+            print(f"An error occurred while verifying checkout information: {str(e)}")
+            return False
+
+    def enter_username(self, first_name):
+        firstname_locator = self.first_name_locator
+        self.enter_text(firstname_locator, first_name)
+
+    def enter_lastname(self, last_name):
+        lastname_locator = self.last_name_locator
+        self.enter_text(lastname_locator, last_name)
+
+    def enter_postal_code(self, postal_code):
+        postalcode_locator = self.postal_code_locator
+        self.enter_text(postalcode_locator, postal_code)
+
+    def click_on_continue_button(self):
+        self.click_element(self.continue_button_locator)
+
+    def click_on_finish_button(self):
+        self.click_element(self.finish_button_locator)
+
     def click_on_sort_button(self):
         self.click_element(*self.sorting_button_locator)
 
@@ -206,4 +242,3 @@ class StartSaucedemo(BasePage):
 
         except Exception as e:
             print("Error while verifying sorted order:", e)
-
