@@ -37,6 +37,25 @@ def test_new_user_login(petstore):
     username = "SAw"
     password = "NewSA123"
 
-    response = petstore.login_with_new_user(username, password)
+    response = petstore.authenticate_user(username, password)
     assert response.status_code == 200
     assert "logged in user session" in response.json()["message"]
+
+
+@pytest.mark.api
+def test_update_user(petstore):
+    username = "SAw"
+    user_data = {
+        "id": 10203040,
+        "username": "SAw2",
+        "firstName": "Svitlana",
+        "lastName": "Stest",
+        "email": "new@new.com",
+        "password": "NewSA123",
+        "phone": "string",
+        "userStatus": 0
+    }
+
+    response = petstore.put_update_user(username, user_data)
+    assert response.status_code == 200
+

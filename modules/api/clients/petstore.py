@@ -16,7 +16,7 @@ class Petstore:
         response = requests.get(endpoint)
         return response
 
-    def login_with_new_user(self, username, password):
+    def authenticate_user(self, username, password):
         endpoint = f"{self.base_url}/user/login"
         params = {
             "username": username,
@@ -24,3 +24,10 @@ class Petstore:
         }
         response = requests.get(endpoint, params=params)
         return response
+
+    def put_update_user(self, username, user_data):
+        endpoint = f"{self.base_url}/user/{username}"
+
+        response = requests.put(endpoint, json=user_data)
+        return response
+
