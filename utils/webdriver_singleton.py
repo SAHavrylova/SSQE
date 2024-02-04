@@ -7,7 +7,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 class WebDriverSingleton:
     _instance = None
 
-    def __new__(cls, browser = "chrome"):
+    def __new__(cls, browser="chrome"):
         if cls._instance is None:
             cls._instance = super(WebDriverSingleton, cls).__new__(cls)
             if browser.lower() == "chrome":
@@ -35,7 +35,8 @@ class WebDriverSingleton:
         self.driver.quit()
     
     @classmethod
-    def _destroy_instance(cls):
+    def _destroy_instance(cls) -> object:
         if cls._instance is not None:
             cls._instance.quit_driver()
             cls._instance = None
+

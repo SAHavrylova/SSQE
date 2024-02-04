@@ -3,51 +3,59 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
+import logging
 
 
 class StartSaucedemo(BasePage):
     URL = "https://www.saucedemo.com/"
-    username_field = (By.ID, "user-name")
-    password_field = (By.ID, "password")
-    login_btn = (By.ID, "login-button")
-    header_item = (By.CLASS_NAME, "header_label")
-    header_title = (By.CLASS_NAME, "app_logo")
-    inventory_details_container = (By.CLASS_NAME, "inventory_details_container")
-    inventory_details_img = (By.CLASS_NAME, "inventory_details_img")
-    inventory_details_name = (By.CLASS_NAME, "inventory_details_name")
-    inventory_details_desc = (By.CLASS_NAME, "inventory_details_desc")
-    inventory_details_price = (By.CLASS_NAME, "inventory_details_price")
-    add_to_cart_btn = (By.ID, "add-to-cart-sauce-labs-backpack")
-    back_to_products_btn = (By.ID, "back-to-products")
-    shooping_cart = (By.ID, "shopping_cart_container")
+    username_field_locator = (By.ID, "user-name")
+    password_field_locator = (By.ID, "password")
+    login_btn_locator = (By.ID, "login-button")
+    header_item_locator = (By.CLASS_NAME, "header_label")
+    header_title_locator = (By.CLASS_NAME, "app_logo")
+    inventory_details_container_locator = (By.CLASS_NAME, "inventory_details_container")
+    inventory_details_img_locator = (By.CLASS_NAME, "inventory_details_img")
+    inventory_details_name_locator = (By.CLASS_NAME, "inventory_details_name")
+    inventory_details_description_locator = (By.CLASS_NAME, "inventory_details_desc")
+    inventory_details_price_locator = (By.CLASS_NAME, "inventory_details_price")
+    add_to_cart_button_locator = (By.ID, "add-to-cart-sauce-labs-backpack")
+    back_to_products_button_locator = (By.ID, "back-to-products")
+    shopping_cart_locator = (By.ID, "shopping_cart_container")
+    sorting_button_locator = (By.CLASS_NAME, "select_container")
+    sort_options_dropdown_locator = (By.CLASS_NAME, "product_sort_container")
+    inventory_list_locator = (By.CLASS_NAME, "inventory_list")
+    inventory_item_locator = (By.CLASS_NAME, "inventory_item")
+    inventory_name_locator = (By.CLASS_NAME, "inventory_item_name ")
+    inventory_item_price_locator = (By.CLASS_NAME, "inventory_item_price")
+
 
     added_items = []
 
     def __init__(self) -> None:
         super().__init__()
-    
+
     def go_to_saucedemo(self):
         self.driver.get(StartSaucedemo.URL)
-    
+
     def click_on_username_field(self, username):
-        username_element = self.driver.find_element(*self.username_field)
+        username_element = self.driver.find_element(*self.username_field_locator)
         username_element.click()
         username_element.send_keys(username)
-    
+
     def click_on_password_field(self):
-        password_element = self.driver.find_element(*self.password_field)
+        password_element = self.driver.find_element(*self.password_field_locator)
         password_element.click()
         password_element.send_keys("secret_sauce")
-    
+
     def click_on_login_button(self):
-        login_element = self.driver.find_element(*self.login_btn)
+        login_element = self.driver.find_element(*self.login_btn_locator)
         login_element.click()
-    
+
     def verify_header_label(self, exp_header_label_text):
-        header_labels = self.driver.find_elements(*self.header_item)
+        header_labels = self.driver.find_elements(*self.header_item_locator)
 
         for header_label in header_labels:
-            header_link = header_label.find_element(*self.header_title)
+            header_link = header_label.find_element(*self.header_title_locator)
             link_text = header_link.text
             if link_text == exp_header_label_text:
                 return True
@@ -72,40 +80,36 @@ class StartSaucedemo(BasePage):
                 )
             except:
                 return False
-        
+
         return True
-    
+
     def click_on_specific_product(self):
         element = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.ID, "item_4_title_link"))
         )
 
         element.click()
-            
-    def verify_product_infos(self):
+
+    def verify_product_info(self):
         elements_present = True
         try:
-            self.driver.find_elements(*self.inventory_details_container)
-            self.driver.find_elements(*self.inventory_details_img)
-            self.driver.find_elements(*self.inventory_details_name)
-            self.driver.find_elements(*self.inventory_details_desc)
+            self.driver.find_elements(*self.inventory_details_container_locator)
+            self.driver.find_elements(*self.inventory_details_img_locator)
+            self.driver.find_elements(*self.inventory_details_name_locator)
+            self.driver.find_elements(*self.inventory_details_description_locator)
             self.driver.find_elements(*self.inventory_details_price)
-            self.driver.find_elements(*self.add_to_cart_btn)
+            self.driver.find_elements(*self.add_to_cart_button_locator)
         except:
             elements_present = False
-        
+
         if elements_present:
             print("All elements are present.")
         else:
             print("Some elements are missing.")
 
-
     def click_on_back_to(self):
         try:
-            back_to = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable(self.back_to_products_btn)
-            )
-            back_to.click()
+            self.click_element(self.back_to_products_button_locator)
         except Exception as e:
             print(f"An error occurred while clicking on 'Back to products': {str(e)}")
 
@@ -125,18 +129,18 @@ class StartSaucedemo(BasePage):
                     break
             else:
                 print(f"Item '{item_name}' not found in inventory.")
-            
+
         except Exception as e:
             print(f"An error occurred: {str(e)}")
-    
+
     @staticmethod
     def get_added_items():
         return StartSaucedemo.added_items
-    
-    def click_on_shooping_cart(self):
-        shooping = self.driver.find_element(*self.shooping_cart)
-        shooping.click()
-    
+
+    def click_on_shopping_cart(self):
+        shopping = self.driver.find_element(*self.shopping_cart_locator)
+        shopping.click()
+
     def get_cart_items(self):
         try:
             cart_items = self.driver.find_elements(By.CLASS_NAME, 'inventory_item_name')
@@ -155,8 +159,51 @@ class StartSaucedemo(BasePage):
         for item in added_items:
             assert item in cart_items, f"{item} not found on cart"
 
-        print("All items verify successefully")
-    
+        print("All items verify successfully")
 
-            
-        
+    def click_on_sort_button(self):
+        self.click_element(*self.sorting_button_locator)
+
+    def sort_product_by_option(self, choose_option):
+        try:
+            self.click_on_sort_button()
+
+            option_list = self.wait_until(EC.element_to_be_clickable(self.sort_options_dropdown_locator))
+            select = Select(option_list)
+            select.select_by_visible_text(choose_option)
+            return True
+
+        except Exception as e:
+            logging.error("Error while sorting: %s", e)
+            return False
+
+    def verify_sorted_order_by_name(self):
+        try:
+            inventory_list = self.wait_until(EC.presence_of_element_located(self.inventory_list_locator))
+            inventory_items = inventory_list.find_elements(*self.inventory_item_locator)
+
+            for item in inventory_items:
+                name_element = item.find_element(*self.inventory_name_locator)
+                name = name_element.text
+
+                print(f"Title: {name}")
+                print("Sorted successfully")
+
+        except Exception as e:
+            print("Error while verifying sorted order:", e)
+
+    def verify_sorted_order_by_price(self):
+        try:
+            inventory_list = self.wait_until(EC.presence_of_element_located(self.inventory_list_locator))
+            inventory_items = inventory_list.find_elements(*self.inventory_item_locator)
+
+            for item in inventory_items:
+                price_element = item.find_element(*self.inventory_item_price_locator)
+                price = price_element.text
+
+                print(f"Price: {price}")
+                print("Sorted successfully")
+
+        except Exception as e:
+            print("Error while verifying sorted order:", e)
+

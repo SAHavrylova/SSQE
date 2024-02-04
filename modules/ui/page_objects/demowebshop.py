@@ -36,7 +36,6 @@ class StartShopPage(BasePage):
     display_pager = (By.CLASS_NAME, "pager")
     add_card_btn = (By.CLASS_NAME, "button-2.product-box-add-to-cart-button")
 
-
     def __init__(self) -> None:
         super().__init__()
     
@@ -133,15 +132,12 @@ class StartShopPage(BasePage):
 
     def verify_logout_text(self, expected_text):
         try:
-            # Знайдіть елемент з текстом "Logout" після логіну
             logout_element = WebDriverWait(self.driver, 10).until(
                 EC.visibility_of_element_located(self.logout_btn)
             )
 
-            # Отримайте текст елемента
             actual_text = logout_element.text
 
-            # Порівняйте отриманий текст з очікуваним текстом
             assert actual_text == expected_text
             print("Logout text verified successfully.")
 
@@ -221,7 +217,7 @@ class StartShopPage(BasePage):
                 price = float(price_element.text.replace("$", ""))
 
                 print(f"Title: {title}, Price: {price}") # if need to see result
-                print("Sorted succsessfully")
+                print("Sorted successfully")
 
         except Exception as e:
             print("Error while verifying prices by title:", e)
