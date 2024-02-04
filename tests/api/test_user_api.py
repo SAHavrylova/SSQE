@@ -59,3 +59,12 @@ def test_update_user(petstore):
     response = petstore.put_update_user(username, user_data)
     assert response.status_code == 200
 
+
+@pytest.mark.api
+def test_delete_user(petstore):
+    username_delete = "SAw"
+
+    response = petstore.delete_user_by_username(username_delete)
+    assert response.status_code == 200
+
+

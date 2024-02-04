@@ -31,3 +31,8 @@ class Petstore:
         response = requests.put(endpoint, json=user_data)
         return response
 
+    def delete_user_by_username(self, username):
+        endpoint = f"{self.base_url}/user/{username}"
+        response = requests.delete(endpoint)
+        return response
+
