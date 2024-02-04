@@ -1,5 +1,4 @@
 import pytest
-import time
 import random
 
 
@@ -65,10 +64,6 @@ def test_complete_order_process(start_sauce_instance):
     assert start_sauce_instance.verify_checkout_information("Checkout: Complete!")
 
 
-
-
-
-
 @pytest.mark.sauce
 def test_change_sorting_by_name(start_sauce_instance):
     start_sauce_instance.click_on_username_field("standard_user")
@@ -90,6 +85,4 @@ def test_change_sorting_by_name(start_sauce_instance):
     start_sauce_instance.sort_product_by_option("Price (high to low)")
     start_sauce_instance.verify_sorted_order_by_price()
 
-
-    time.sleep(5)
 

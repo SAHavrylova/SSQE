@@ -3,7 +3,7 @@ import requests
 
 class Petstore:
     
-    def __init__(self, base_url = "https://petstore.swagger.io/v2"):
+    def __init__(self, base_url):
         self.base_url = base_url
     
     def create_user(self, user_data):
@@ -14,4 +14,13 @@ class Petstore:
     def get_user_by_username(self, username):
         endpoint = f"{self.base_url}/user/{username}"
         response = requests.get(endpoint)
+        return response
+
+    def login_with_new_user(self, username, password):
+        endpoint = f"{self.base_url}/user/login"
+        params = {
+            "username": username,
+            "password": password
+        }
+        response = requests.get(endpoint, params=params)
         return response
