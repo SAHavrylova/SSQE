@@ -50,3 +50,18 @@ class Petstore:
         endpoint = F"{self.base_url}/pet"
         response = requests.put(endpoint, json=pet_data)
         return response
+
+    def post_create_order(self, order_data):
+        endpoint = f"{self.base_url}/store/order"
+        response = requests.post(endpoint, json=order_data)
+        return response
+
+    def get_find_order(self, order_id):
+        endpoint = f"{self.base_url}/store/order/{order_id}"
+        response = requests.get(endpoint)
+        return response
+
+    def delete_order(self, order_id):
+        endpoint = f"{self.base_url}/store/order/{order_id}"
+        response = requests.delete(endpoint)
+        return response
