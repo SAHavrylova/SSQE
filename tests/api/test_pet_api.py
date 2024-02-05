@@ -46,3 +46,10 @@ def test_add_a_few_pets(petstore):
         response = petstore.add_new_pet(pet_data)
         assert response.status_code == 200
 
+@pytest.mark.api
+def test_find_pet_by_id(petstore):
+    id_pet = 2396
+    response = petstore.find_pet_by_ids(id_pet)
+
+    assert response.status_code == 200
+

@@ -41,3 +41,9 @@ class Petstore:
         response = requests.post(endpoint, json=pet_data)
         return response
 
+    def find_pet_by_id(self, pet_id):
+        endpoint = f"{self.base_url}/pet/{pet_id}"
+        response = requests.get(endpoint)
+        return response
+
+    def
