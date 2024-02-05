@@ -46,10 +46,35 @@ def test_add_a_few_pets(petstore):
         response = petstore.add_new_pet(pet_data)
         assert response.status_code == 200
 
+
 @pytest.mark.api
 def test_find_pet_by_id(petstore):
     id_pet = 2396
-    response = petstore.find_pet_by_ids(id_pet)
+    response = petstore.get_find_pet_by_id(id_pet)
 
     assert response.status_code == 200
 
+
+@pytest.mark.api
+def test_update_pet(petstore):
+    pet_data = {
+        "id": 2394,
+        "category": {
+            "id": 2396,
+            "name": "string"
+        },
+        "name": "ToToSha",
+        "photoUrls": [
+            "string"
+        ],
+        "tags": [
+            {
+                "id": 2396,
+                "name": "string"
+            }
+        ],
+        "status": "available"
+    }
+
+    response = petstore.put_update_pet(pet_data)
+    assert response.status_code == 200
