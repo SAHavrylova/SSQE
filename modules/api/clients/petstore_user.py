@@ -36,3 +36,8 @@ class Petstore:
         response = requests.delete(endpoint)
         return response
 
+    def add_new_pet(self, pet_data):
+        endpoint = f"{self.base_url}/pet"
+        response = requests.post(endpoint, json=pet_data)
+        return response
+

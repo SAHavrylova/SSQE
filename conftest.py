@@ -2,7 +2,7 @@ import pytest
 import json
 import requests
 import random
-from modules.api.clients.petstore import Petstore
+from modules.api.clients.petstore_user import Petstore
 from modules.ui.page_objects.start_page_epam import StartEpamPage
 from modules.ui.page_objects.demowebshop import StartShopPage
 from modules.ui.page_objects.saucedemo import StartSaucedemo
