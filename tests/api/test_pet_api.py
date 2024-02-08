@@ -1,8 +1,13 @@
 import pytest
 
 
+# what else except status code could be verified?
+# in real project try your best to not use hardcoded ids, cause it could lead to unstable and dependent tests
 @pytest.mark.api
 def test_add_a_few_pets(petstore):
+    # just for a future :)
+    # it will be better to make some method like get_new_pet_data(name, category, pthoto, tags, status) where all structure will be covered
+    # For long and variable structures pattern Builder could be used
     pet_data_list = [
         {
             "id": 2395,
@@ -46,7 +51,8 @@ def test_add_a_few_pets(petstore):
         response = petstore.add_new_pet(pet_data)
         assert response.status_code == 200
 
-
+# understandable that it's can not be done with this test endpoint
+# but for the future it's bad approach to use hardcoded Ids in tests, in case of different envs or some side changes in DB
 @pytest.mark.api
 def test_find_pet_by_id(petstore):
     id_pet = 2396

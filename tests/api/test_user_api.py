@@ -17,6 +17,9 @@ def test_create_user(petstore):
     response = petstore.create_user(user_data)
 
     assert response.status_code == 200
+    # it's better to "save" resources and use
+    # response_json = response.json()
+    # assert response_json["code"] == 200
     assert response.json()["code"] == 200
     assert response.json()["type"] == "unknown"
     assert response.json()["message"] == str(user_data["id"])

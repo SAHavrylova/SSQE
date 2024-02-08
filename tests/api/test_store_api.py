@@ -22,6 +22,7 @@ def test_find_order(petstore):
     response = petstore.get_find_order(order_id)
     assert response.status_code == 200
 
+
 @pytest.mark.api
 def test_delete_order_by_id(petstore):
     order_id = 5
