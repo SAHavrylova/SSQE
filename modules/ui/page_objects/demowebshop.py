@@ -6,11 +6,11 @@ import uuid
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 
-class StartShopPage(BasePage):
-    URL = "https://demowebshop.tricentis.com/"
+
+class LocatorsStartShopPage:
     generated_emails = []
-    register_btn = (By.CLASS_NAME, "ico-register")
-    register_title = (By.CLASS_NAME, "page-title")
+    REGISTER_BUTTON = (By.CLASS_NAME, "ico-register")
+    REGISTER_TITLE = (By.CLASS_NAME, "page-title")
     required_fields = {
         "FirstName": (By.ID, "FirstName"),
         "LastName": (By.ID, "LastName"),
@@ -18,26 +18,32 @@ class StartShopPage(BasePage):
         "Password": (By.ID, "Password"),
         "ConfirmPassword": (By.ID, "ConfirmPassword"),
     }
-    submit_btn = (By.ID, "register-button")
-    signup_result = (By.CLASS_NAME, "result")
-    login_btn = (By.CLASS_NAME, "ico-login")
-    submit_login = (By.CLASS_NAME, "login-button")
-    logout_btn = (By.CLASS_NAME, "ico-logout")
-    top_menu = (By.CLASS_NAME, "top-menu")
-    computers_btn = (By.XPATH, "//a[contains(text(),'Computers')]")
-    sub_groups = (By.CLASS_NAME, "sublist")
-    sorting = (By.CLASS_NAME, "product-sorting")
-    sort_by = (By.ID, "products-orderby")
-    product_grid = (By.CLASS_NAME, "product-grid")
-    product_items = (By.CLASS_NAME, "item-box")
-    product_title = (By.CLASS_NAME, "product-title")
-    display = (By.CLASS_NAME, "product-page-size")
-    display_by = (By.ID, "products-pagesize")
-    display_pager = (By.CLASS_NAME, "pager")
-    add_card_btn = (By.CLASS_NAME, "button-2.product-box-add-to-cart-button")
+    SUBMIT_BUTTON = (By.ID, "register-button")
+    SIGNUP_RESULT = (By.CLASS_NAME, "result")
+    LOGIN_BUTTON = (By.CLASS_NAME, "ico-login")
+    SUBMIT_LOGIN_BUTTON = (By.CLASS_NAME, "login-button")
+    LOGOUT_BUTTON = (By.CLASS_NAME, "ico-logout")
+    TOP_MENU = (By.CLASS_NAME, "top-menu")
+    COMPUTERS_TAB = (By.XPATH, "//a[contains(text(),'Computers')]")
+    SUB_GROUPS = (By.CLASS_NAME, "sublist")
+    SORTING = (By.CLASS_NAME, "product-sorting")
+    SORT_BY = (By.ID, "products-orderby")
+    PRODUCT_GRID = (By.CLASS_NAME, "product-grid")
+    PRODUCT_ITEMS = (By.CLASS_NAME, "item-box")
+    PRODUCT_TITLE = (By.CLASS_NAME, "product-title")
+    DISPLAY = (By.CLASS_NAME, "product-page-size")
+    DISPLAY_BY = (By.ID, "products-pagesize")
+    DISPLAY_PAGER = (By.CLASS_NAME, "pager")
+    ADD_CARD_BUTTON= (By.CLASS_NAME, "button-2.product-box-add-to-cart-button")
+
+
+class StartShopPage(BasePage):
+
+    URL = "https://demowebshop.tricentis.com/"
 
     def __init__(self) -> None:
         super().__init__()
+        self.locators = LocatorsStartShopPage()
     
     def go_to_shop(self):
         self.driver.get(StartShopPage.URL)
@@ -45,7 +51,7 @@ class StartShopPage(BasePage):
     def click_on_signup(self):
         try:
             register = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.register_btn)
+                EC.element_to_be_clickable(self.locators.REGISTER_BUTTON)
             )
             register.click()
         
@@ -54,8 +60,8 @@ class StartShopPage(BasePage):
     
     def fill_required_input(self, input_name, signup_text):
         try:
-            if input_name in self.required_fields:
-                required_field = self.required_fields[input_name]
+            if input_name in self.locators.required_fields:
+                required_field = self.locators.required_fields[input_name]
                 field_element = WebDriverWait(self.driver, 10).until(
                     EC.visibility_of_element_located(required_field)
                 )
@@ -70,13 +76,13 @@ class StartShopPage(BasePage):
     def generate_email(self):
         unique_id = str(uuid.uuid4())[:8]
         generated_email = f"sa{unique_id}@test.new.com"
-        self.generated_emails.append(generated_email)
+        self.locators.generated_emails.append(generated_email)
         return generated_email
 
     def click_on_submit(self):
         try:
             confirm_register = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.submit_btn)
+                EC.element_to_be_clickable(self.locators.SUBMIT_BUTTON)
             )
             confirm_register.click()
         
@@ -85,7 +91,7 @@ class StartShopPage(BasePage):
 
     def clear_all_input_fields(self):
         try:
-            for input_name, locator in self.required_fields.items():
+            for input_name, locator in self.locators.required_fields.items():
                 field_element = self.driver.find_element(*locator)
                 field_element.clear()
                 print(f"Cleared {input_name} input successfully")
@@ -95,7 +101,7 @@ class StartShopPage(BasePage):
     def registration_result(self, result_text):
         try:
             register_success = WebDriverWait(self.driver, 5).until(
-                EC.visibility_of_element_located(self.signup_result)
+                EC.visibility_of_element_located(self.locators.SIGNUP_RESULT)
             )
             actual_result_text = register_success.text.strip()
 
@@ -113,7 +119,7 @@ class StartShopPage(BasePage):
     def click_on_login(self):
         try:
             login = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.login_btn)
+                EC.element_to_be_clickable(self.locators.LOGIN_BUTTON)
             )
             login.click()
         
@@ -123,7 +129,7 @@ class StartShopPage(BasePage):
     def click_on_submit_login(self):
         try:
             confirm_login = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.submit_login)
+                EC.element_to_be_clickable(self.locators.SUBMIT_LOGIN_BUTTON)
             )
             confirm_login.click()
         
@@ -133,7 +139,7 @@ class StartShopPage(BasePage):
     def verify_logout_text(self, expected_text):
         try:
             logout_element = WebDriverWait(self.driver, 10).until(
-                EC.visibility_of_element_located(self.logout_btn)
+                EC.visibility_of_element_located(self.locators.LOGOUT_BUTTON)
             )
 
             actual_text = logout_element.text
@@ -145,11 +151,11 @@ class StartShopPage(BasePage):
             print(f"Error verifying logout text: {str(e)}")
     
     def move_to_element(self):
-        computers_element = self.driver.find_element(*self.computers_btn)
+        computers_element = self.driver.find_element(*self.locators.COMPUTERS_TAB)
         actions = ActionChains(self.driver)
         actions.move_to_element(computers_element).perform()
         sub_groups = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located(*self.sub_groups)
+            EC.visibility_of_element_located(*self.locators.SUB_GROUPS)
         )
 
         sub_list = sub_groups.find_elements(By.TAG_NAME, "a")
@@ -172,11 +178,11 @@ class StartShopPage(BasePage):
             print("Error while clicking:", e)
 
     def click_on_categories_with_sub_groups(self, sub_groups_name):
-        computers_element = self.driver.find_element(*self.computers_btn)
+        computers_element = self.driver.find_element(*self.locators.COMPUTERS_TAB)
         actions = ActionChains(self.driver)
         actions.move_to_element(computers_element).perform()
         sub_groups = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located(self.sub_groups)
+            EC.visibility_of_element_located(self.locators.SUB_GROUPS)
         )
 
         sub_list = sub_groups.find_elements(By.TAG_NAME, "a")
@@ -188,11 +194,11 @@ class StartShopPage(BasePage):
     
     def sort_by_option(self, choose_sort):
         try:
-            sort = self.driver.find_element(*self.sort_by)
+            sort = self.driver.find_element(*self.locators.SORT_BY)
             sort.click()
 
             sort_list = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.sort_by)
+                EC.element_to_be_clickable(self.locators.SORT_BY)
             )
             select = Select(sort_list)
             select.select_by_visible_text(choose_sort)
@@ -205,12 +211,12 @@ class StartShopPage(BasePage):
     def verify_by_title(self):
         try:
             product_grid = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located(self.product_grid)
+                EC.presence_of_element_located(self.locators.PRODUCT_GRID)
             )
-            product_items = product_grid.find_elements(*self.product_items)
+            product_items = product_grid.find_elements(*self.locators.PRODUCT_ITEMS)
 
             for item in product_items:
-                title_element = item.find_element(*self.product_title)
+                title_element = item.find_element(*self.locators.PRODUCT_TITLE)
                 title = title_element.text
 
                 price_element = item.find_element(By.CLASS_NAME, "actual-price")
@@ -224,11 +230,11 @@ class StartShopPage(BasePage):
     
     def sort_by_dispalays(self, choose_page_size):
         try:
-            display = self.driver.find_element(*self.display_by)
+            display = self.driver.find_element(*self.locators.DISPLAY_BY)
             display.click()
 
             display_list = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.display_by)
+                EC.element_to_be_clickable(self.locators.DISPLAY_BY)
             )
             select = Select(display_list)
             select.select_by_visible_text(choose_page_size)
@@ -239,7 +245,7 @@ class StartShopPage(BasePage):
     
     def verify_pagination_and_items(self):
         try:
-            pagination = self.driver.find_elements(*self.display_pager)
+            pagination = self.driver.find_elements(*self.locators.DISPLAY_PAGER)
             if pagination:
                 print("Pagination is displayed")
             else:

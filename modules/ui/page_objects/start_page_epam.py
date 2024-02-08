@@ -5,9 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import os
 
 
-class StartEpamPage(BasePage):
-
-    URL = "https://www.epam.com/"
+class LocatorsStartEpamPage:
     LOGO = (By.CLASS_NAME, "header__logo-container")
     CURRENT_THEME_BODY = (By.CLASS_NAME, 'fonts-loaded')
     THEME_SWITCHER = (By.CSS_SELECTOR, ".theme-switcher")
@@ -26,8 +24,13 @@ class StartEpamPage(BasePage):
     SUBMIT_CONTACT_BUTTON = (By.XPATH, "//button[@class='button-ui']")
     BUTTON = (By.CLASS_NAME, "button__content")
 
+
+class StartEpamPage(BasePage):
+    URL = "https://www.epam.com/"
+
     def __init__(self) -> None:
         super().__init__()
+        self.locators = LocatorsStartEpamPage()
 
     def go_to_epam(self):
         self.driver.get(StartEpamPage.URL)
@@ -36,11 +39,11 @@ class StartEpamPage(BasePage):
         script = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"
         self.driver.execute_script(script, element)
 
-    def load_page(self, timeout_seconds=3):
+    def load_page(self, timeout_seconds = 3):
         wait = WebDriverWait(self.driver, timeout_seconds)
         wait.until(lambda driver: True)
 
-    def wait_for_page_load(self, timeout_seconds=10):
+    def wait_for_page_load(self, timeout_seconds = 10):
         WebDriverWait(self.driver, timeout_seconds).until(
             EC.presence_of_element_located((By.TAG_NAME, "body")))
 
@@ -56,21 +59,21 @@ class StartEpamPage(BasePage):
             print(f"Error returning title: {e}")
 
     def get_current_theme(self):
-        current_theme = self.driver.find_element( *self.CURRENT_THEME_BODY )
+        current_theme = self.driver.find_element(*self.locators.CURRENT_THEME_BODY)
         theme = current_theme.get_attribute("class")
         return "dark-mode" if "dark-mode" in theme else "light-mode"
 
     def theme_switcher(self):
-        switcher = self.driver.find_element( *self.THEME_SWITCHER )
+        switcher = self.driver.find_element(*self.locators.THEME_SWITCHER)
         self.driver.execute_script("arguments[0].click();", switcher)
 
     def get_language(self):
-        global_language_button = self.driver.find_element( *self.LANGUAGE_BUTTON )
+        global_language_button = self.driver.find_element(*self.locators.LANGUAGE_BUTTON)
         global_language_button.click()
 
     def change_language_to_ua(self):
         ua_language = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable( self.UA_LANGUAGE )
+            EC.element_to_be_clickable(self.locators.UA_LANGUAGE)
         )
         ua_language.click()
 
@@ -98,11 +101,11 @@ class StartEpamPage(BasePage):
         return False  # If no match is found, print a message and return False
 
     def go_to_footer(self):
-        footer_elem = self.driver.find_element(*self.footer_locator)
+        footer_elem = self.driver.find_element(*self.locators.FOOTER)
         self.driver.execute_script("arguments[0].scrollIntoView(true);", footer_elem)
 
     def check_footer_title(self, footer_expected_text):
-        footer_items = self.driver.find_elements(*self.footer_title_locator)
+        footer_items = self.driver.find_elements(*self.locators.FOOTER_TITLE)
 
         for footer_item in footer_items:
             footer_link = footer_item.find_element(By.CLASS_NAME, 'links-item')
@@ -112,7 +115,7 @@ class StartEpamPage(BasePage):
         return False
 
     def scroll_to_our_locations(self):
-        locations = self.driver.find_elements(*self.scroll_to_locator)
+        locations = self.driver.find_elements(*self.locators.SCROLL_TO)
         locations_element = None
         for element in locations:
             if "Locations" in element.text:
@@ -182,7 +185,7 @@ class StartEpamPage(BasePage):
 
     def click_on_current_our_location(self, choose_current_location):
         try:
-            our_location_buttons = self.driver.find_elements(*self.current_our_location_button)
+            our_location_buttons = self.driver.find_elements(*self.locators.CURRENT_OUR_LOCATION_BUTTON)
 
             for our_location_button in our_location_buttons:
                 location_title = our_location_button.find_element(By.CLASS_NAME,
@@ -203,7 +206,7 @@ class StartEpamPage(BasePage):
 
     def click_search_button(self):
         try:
-            search_btn = self.driver.find_element(*self.search_button_locator)
+            search_btn = self.driver.find_element(*self.locators.SEARCH_BUTTON)
             search_btn.click()
 
             print("Search button clicked successfully.")
@@ -214,7 +217,7 @@ class StartEpamPage(BasePage):
     def new_form_search(self, search_text):
         try:
             form_search = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable(self.search_field_locator)
+                EC.element_to_be_clickable(self.locators.SEARCH_FIELD)
             )
             form_search.click()
             form_search.send_keys(search_text)
@@ -226,7 +229,7 @@ class StartEpamPage(BasePage):
     def click_find_button(self):
         try:
             find_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable(self.find_button_locator)
+                EC.element_to_be_clickable(self.locators.FIND_BUTTON)
             )
             find_button.click()
             print("Find button clicked successfully.")
@@ -256,7 +259,7 @@ class StartEpamPage(BasePage):
 
     def scroll_click_submit_button(self):
         try:
-            submit_btn = self.driver.find_element( *self.SUBMIT_CONTACT_BUTTON )
+            submit_btn = self.driver.find_element(*self.locators.SUBMIT_CONTACT_BUTTON)
             self.scroll_to_element(submit_btn)
             submit_btn.click()
 
@@ -282,7 +285,7 @@ class StartEpamPage(BasePage):
     def click_on_logo(self):
         try:
             logo = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable( self.LOGO )
+                EC.element_to_be_clickable(self.locators.LOGO)
             )
             logo.click()
             print(f"Logo clicked successfully.")
@@ -291,7 +294,7 @@ class StartEpamPage(BasePage):
             print(f"Error clicking on logo: {str(e)}")
 
     def scroll_to(self, target_text):
-        scroll = self.driver.find_elements(*self.scroll_to_locator)
+        scroll = self.driver.find_elements(*self.locators.SCROLL_TO)
         scroll_element = None
 
         for element in scroll:
@@ -306,7 +309,7 @@ class StartEpamPage(BasePage):
             print(f"{target_text} not found")
 
     def click_on_button(self, button_name):
-        button = self.driver.find_elements( *self.BUTTON )
+        button = self.driver.find_elements(*self.locators.BUTTON)
         button_element = None
 
         for btn_element in button:

@@ -4,8 +4,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
 
-class AboutEpamPage(BasePage):
-    URL_about = "https://www.epam.com/about"
+
+class LocatorsAboutEpamPage:
     logo = (By.CLASS_NAME, "header__logo-container")
     current_theme = (By.CLASS_NAME, 'fonts-loaded')
     theme_switcher = (By.CSS_SELECTOR, ".theme-switcher")
@@ -24,19 +24,25 @@ class AboutEpamPage(BasePage):
     button_submit_contact_locator = (By.XPATH, "//button[@class='button-ui']")
     button_locator = (By.CLASS_NAME, "button__content")
 
+
+class AboutEpamPage(BasePage):
+    URL_about = "https://www.epam.com/about"
+
     def __init__(self) -> None:
         super().__init__()
-    
+        self.locators = LocatorsAboutEpamPage()
+
     def go_to_about(self):
         self.driver.get(AboutEpamPage.URL_about)
+
     def scroll_to_element(self, element):
         script = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"
         self.driver.execute_script(script, element)
-    
+
     def load_page(self, timeout_seconds = 3):
         wait = WebDriverWait(self.driver, timeout_seconds)
         wait.until(lambda driver: True)
-    
+
     def wait_for_page_load(self, timeout_seconds = 10):
         WebDriverWait(self.driver, timeout_seconds).until(
             EC.presence_of_element_located((By.TAG_NAME, "body")))
@@ -48,37 +54,39 @@ class AboutEpamPage(BasePage):
             )
             print("Title return successfully.")
             return self.driver.title == exp_title
-        
+
         except Exception as e:
             print(f"Error returning title: {(e)}")
 
     def check_header_title(self, header_expected_text):
-        
-        header_items = self.driver.find_elements(By.CLASS_NAME, 'top-navigation__item') # Locate all top-navigation__item elements
-        for header_item in header_items: # Iterate over each header item           
-            header_link = header_item.find_element(By.CLASS_NAME, 'top-navigation__item-link') # Find the link within the header item
-            link_text = header_link.text # Get the text of the link
-            if link_text == header_expected_text: # Check if the link text matches the expected text
+
+        header_items = self.driver.find_elements(By.CLASS_NAME,
+                                                 'top-navigation__item')  # Locate all top-navigation__item elements
+        for header_item in header_items:  # Iterate over each header item
+            header_link = header_item.find_element(By.CLASS_NAME,
+                                                   'top-navigation__item-link')  # Find the link within the header item
+            link_text = header_link.text  # Get the text of the link
+            if link_text == header_expected_text:  # Check if the link text matches the expected text
                 return True  # Return True if a match is found
-        
-        return False # If no match is found, print a message and return False
-    
+
+        return False  # If no match is found, print a message and return False
+
     def go_to_footer(self):
-        footer_elem = self.driver.find_element( *self.footer )
+        footer_elem = self.driver.find_element(*self.footer)
         self.driver.execute_script("arguments[0].scrollIntoView(true);", footer_elem)
-    
+
     def check_footer_title(self, footer_expected_text):
-        footer_items = self.driver.find_elements( *self.footer_title )
+        footer_items = self.driver.find_elements(*self.footer_title)
 
         for footer_item in footer_items:
             footer_link = footer_item.find_element(By.CLASS_NAME, 'links-item')
             link_text = footer_link.text
             if link_text == footer_expected_text:
-                return True  
+                return True
         return False
-    
+
     def scroll_to_our_locations(self):
-        locations = self.driver.find_elements(*self.scroll_to_locator)
+        locations = self.driver.find_elements(*self.locators.scroll_to_locator)
         locations_element = None
         for element in locations:
             if "Locations" in element.text:
@@ -89,7 +97,7 @@ class AboutEpamPage(BasePage):
             self.driver.execute_script("arguments[0].scrollIntoView();", locations_element)
         else:
             print("Our Locations not found")
-    
+
     def check_locations_title(self):
         tabs_locations = ["AMERICAS", "EMEA", "APAC"]
 
@@ -104,7 +112,7 @@ class AboutEpamPage(BasePage):
                 return False
 
         return True
-    
+
     def click_locations(self, choose_locations_name):
         try:
             locations_titles = self.driver.find_elements(By.CLASS_NAME, "tabs-23__link")
@@ -122,7 +130,8 @@ class AboutEpamPage(BasePage):
 
                 # Wait for the element to become active
                 WebDriverWait(self.driver, 10).until(
-                    EC.element_to_be_clickable((By.XPATH, f"//a[text()='{choose_locations_name}'][@class='tabs-23__link js-tabs-link active']"))
+                    EC.element_to_be_clickable((By.XPATH,
+                                                f"//a[text()='{choose_locations_name}'][@class='tabs-23__link js-tabs-link active']"))
                 )
                 print(f"Clicked on {choose_locations_name} tab, and it is now active.")
             else:
@@ -143,21 +152,22 @@ class AboutEpamPage(BasePage):
 
         except Exception as e:
             print(f"Error checking locations info: {e}")
-    
+
     def click_on_current_our_location(self, choose_current_location):
         try:
             our_location_buttons = self.driver.find_elements(*self.current_our_location_button)
 
             for our_location_button in our_location_buttons:
-                location_title = our_location_button.find_element(By.CLASS_NAME, "locations-viewer-23__country-title").text
+                location_title = our_location_button.find_element(By.CLASS_NAME,
+                                                                  "locations-viewer-23__country-title").text
                 print(f"Checking title: {location_title}")
-                
+
                 if location_title.strip() == choose_current_location:
                     self.scroll_to_element(our_location_button)
                     our_location_button.click()
                     print(f"Clicked on {choose_current_location} button")
                     break
-            
+
             else:
                 print(f"Element not found: {choose_current_location}")
 
@@ -170,10 +180,10 @@ class AboutEpamPage(BasePage):
             search_btn.click()
 
             print("Search button clicked successfully.")
-        
+
         except Exception as e:
             print(f"Error clicking on search button: {str(e)}")
-    
+
     def new_form_search(self, search_text):
         try:
             form_search = WebDriverWait(self.driver, 10).until(
@@ -182,10 +192,10 @@ class AboutEpamPage(BasePage):
             form_search.click()
             form_search.send_keys(search_text)
             print("Search text {search_text} entered successfully.")
-        
+
         except Exception as e:
             print(f"Error clicking on search field: {str(e)}")
-    
+
     def click_find_button(self):
         try:
             find_button = WebDriverWait(self.driver, 10).until(
@@ -193,13 +203,13 @@ class AboutEpamPage(BasePage):
             )
             find_button.click()
             print("Find button clicked successfully.")
-        
+
         except Exception as e:
             print(f"Error clicking on Find button: {str(e)}")
-    
+
     def get_result_count_locator(self):
         return (By.CLASS_NAME, 'search-results__counter')
-        
+
     def check_search_result(self):
         try:
             result_count_element = WebDriverWait(self.driver, 10).until(
@@ -213,7 +223,7 @@ class AboutEpamPage(BasePage):
                 print(f"Search returned {result_count} results.")
             else:
                 print("No result found")
-        
+
         except Exception as e:
             print(f"Error checking search results: {str(e)}")
 
@@ -224,7 +234,7 @@ class AboutEpamPage(BasePage):
             submit_btn.click()
 
         except Exception as e:
-            print(f"An error occurred: {str(e)}")  
+            print(f"An error occurred: {str(e)}")
 
     def validation_field(self, expected_name):
         try:
@@ -245,11 +255,11 @@ class AboutEpamPage(BasePage):
     def click_on_logo(self):
         try:
             logo = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable( self.logo )
+                EC.element_to_be_clickable(self.logo)
             )
             logo.click()
             print(f"Logo clicked successfully.")
-        
+
         except Exception as e:
             print(f"Error clicking on logo: {str(e)}")
 
@@ -261,13 +271,13 @@ class AboutEpamPage(BasePage):
             if target_text in element.text:
                 scroll_element = element
                 break
-        
+
         if scroll_element:
             self.driver.execute_script("arguments[0].scrollIntoView();", scroll_element)
             print(f"Scrolled to {target_text} element successfully")
         else:
             print(f"{target_text} not found")
-    
+
     def click_on_button(self, button_name):
         button = self.driver.find_elements(*self.button_locator)
         button_element = None
@@ -276,18 +286,18 @@ class AboutEpamPage(BasePage):
             if button_name in btn_element.text:
                 button_element = btn_element
                 break
-        
+
         if button_element:
             button_element.click()
             print(f"Clicked on {button_name} button successfully")
         else:
             print(f"{button_name} not found")
-    
+
     def download_file(self):
         home_dir = os.path.expanduser("~")
         download_dir = os.path.join(home_dir, "Downloads")
         print("Way for:", download_dir)
-        
+
         downloaded_files = os.listdir(download_dir)
         expected_file = "EPAM_Corporate_Overview_Q3_october.pdf"
 
