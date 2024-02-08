@@ -6,13 +6,13 @@ import os
 
 class AboutEpamPage(BasePage):
     URL_about = "https://www.epam.com/about"
-    logo_locator = (By.CLASS_NAME, "header__logo-container")
-    current_theme_locator = (By.CLASS_NAME, 'fonts-loaded')
-    theme_switcher_locator = (By.CSS_SELECTOR, ".theme-switcher")
-    language_button_locator = (By.CLASS_NAME, 'location-selector__button')
-    ua_language_locator = (By.XPATH, '//a[@class="location-selector__link" and @href="https://careers.epam.ua"]')
-    footer_locator = (By.CLASS_NAME, "footer-container")
-    footer_title_locator = (By.CLASS_NAME, 'policies')
+    logo = (By.CLASS_NAME, "header__logo-container")
+    current_theme = (By.CLASS_NAME, 'fonts-loaded')
+    theme_switcher = (By.CSS_SELECTOR, ".theme-switcher")
+    language_button = (By.CLASS_NAME, 'location-selector__button')
+    ua_language = (By.XPATH, '//a[@class="location-selector__link" and @href="https://careers.epam.ua"]')
+    footer = (By.CLASS_NAME, "footer-container")
+    footer_title = (By.CLASS_NAME, 'policies')
     scroll_to_locator = (By.CLASS_NAME, "text-ui-23")
     locations_carousel_locator = (By.CSS_SELECTOR, '.tabs-23__item.js-tabs-item.active')
     current_our_location_button = (By.CLASS_NAME, "locations-viewer-23__country-btn")
@@ -64,11 +64,11 @@ class AboutEpamPage(BasePage):
         return False # If no match is found, print a message and return False
     
     def go_to_footer(self):
-        footer_elem = self.driver.find_element(*self.footer_locator)
+        footer_elem = self.driver.find_element( *self.footer )
         self.driver.execute_script("arguments[0].scrollIntoView(true);", footer_elem)
     
     def check_footer_title(self, footer_expected_text):
-        footer_items = self.driver.find_elements(*self.footer_title_locator)
+        footer_items = self.driver.find_elements( *self.footer_title )
 
         for footer_item in footer_items:
             footer_link = footer_item.find_element(By.CLASS_NAME, 'links-item')
@@ -245,7 +245,7 @@ class AboutEpamPage(BasePage):
     def click_on_logo(self):
         try:
             logo = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.logo_locator)
+                EC.element_to_be_clickable( self.logo )
             )
             logo.click()
             print(f"Logo clicked successfully.")

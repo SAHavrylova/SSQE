@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.mark.api
-def test_add_a_few_pets(petstore):
+def test_add_a_few_pets ( petstore ):
     pet_data_list = [
         {
             "id": 2395,
@@ -43,20 +43,20 @@ def test_add_a_few_pets(petstore):
     ]
 
     for pet_data in pet_data_list:
-        response = petstore.add_new_pet(pet_data)
+        response = petstore.add_new_pet ( pet_data )
         assert response.status_code == 200
 
 
 @pytest.mark.api
-def test_find_pet_by_id(petstore):
+def test_find_pet_by_id ( petstore ):
     id_pet = 2396
-    response = petstore.get_find_pet_by_id(id_pet)
+    response = petstore.get_find_pet_by_id ( id_pet )
 
     assert response.status_code == 200
 
 
 @pytest.mark.api
-def test_update_pet(petstore):
+def test_update_pet ( petstore ):
     pet_data = {
         "id": 2394,
         "category": {
@@ -76,5 +76,5 @@ def test_update_pet(petstore):
         "status": "available"
     }
 
-    response = petstore.put_update_pet(pet_data)
+    response = petstore.put_update_pet ( pet_data )
     assert response.status_code == 200

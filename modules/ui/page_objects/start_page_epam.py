@@ -6,24 +6,25 @@ import os
 
 
 class StartEpamPage(BasePage):
+
     URL = "https://www.epam.com/"
-    logo_locator = (By.CLASS_NAME, "header__logo-container")
-    current_theme_locator = (By.CLASS_NAME, 'fonts-loaded')
-    theme_switcher_locator = (By.CSS_SELECTOR, ".theme-switcher")
-    language_button_locator = (By.CLASS_NAME, 'location-selector__button')
-    ua_language_locator = (By.XPATH, '//a[@class="location-selector__link" and @href="https://careers.epam.ua"]')
-    footer_locator = (By.CLASS_NAME, "footer-container")
-    footer_title_locator = (By.CLASS_NAME, 'policies')
-    scroll_to_locator = (By.CLASS_NAME, "text-ui-23")
-    locations_carousel_locator = (By.CSS_SELECTOR, '.tabs-23__item.js-tabs-item.active')
-    current_our_location_button = (By.CLASS_NAME, "locations-viewer-23__country-btn")
-    current_our_location_btn_active = (By.CLASS_NAME, "locations-viewer-23__country-title.list.active")
-    search_button_locator = (By.CLASS_NAME, "header-search__button")
-    search_field_locator = (By.ID, 'new_form_search')
-    find_button_locator = (By.XPATH, "//span[@class='bth-text-layer' and contains(text(), 'Find')]")
-    result_count_locator = (By.CLASS_NAME, 'search-results__counter')
-    button_submit_contact_locator = (By.XPATH, "//button[@class='button-ui']")
-    button_locator = (By.CLASS_NAME, "button__content")
+    LOGO = (By.CLASS_NAME, "header__logo-container")
+    CURRENT_THEME_BODY = (By.CLASS_NAME, 'fonts-loaded')
+    THEME_SWITCHER = (By.CSS_SELECTOR, ".theme-switcher")
+    LANGUAGE_BUTTON = (By.CLASS_NAME, 'location-selector__button')
+    UA_LANGUAGE = (By.XPATH, '//a[@class="location-selector__link" and @href="https://careers.epam.ua"]')
+    FOOTER = (By.CLASS_NAME, "footer-container")
+    FOOTER_TITLE = (By.CLASS_NAME, 'policies')
+    SCROLL_TO = (By.CLASS_NAME, "text-ui-23")
+    LOCATIONS_CAROUSEL = (By.CSS_SELECTOR, '.tabs-23__item.js-tabs-item.active')
+    CURRENT_OUR_LOCATION_BUTTON = (By.CLASS_NAME, "locations-viewer-23__country-btn")
+    CURRENT_OUR_LOCATION_BUTTON_ACTIVE = (By.CLASS_NAME, "locations-viewer-23__country-title.list.active")
+    SEARCH_BUTTON = (By.CLASS_NAME, "header-search__button")
+    SEARCH_FIELD = (By.ID, 'new_form_search')
+    FIND_BUTTON = (By.XPATH, "//span[@class='bth-text-layer' and contains(text(), 'Find')]")
+    RESULT_COUNT = (By.CLASS_NAME, 'search-results__counter')
+    SUBMIT_CONTACT_BUTTON = (By.XPATH, "//button[@class='button-ui']")
+    BUTTON = (By.CLASS_NAME, "button__content")
 
     def __init__(self) -> None:
         super().__init__()
@@ -55,21 +56,21 @@ class StartEpamPage(BasePage):
             print(f"Error returning title: {e}")
 
     def get_current_theme(self):
-        current_theme = self.driver.find_element(*self.current_theme_locator)
+        current_theme = self.driver.find_element( *self.CURRENT_THEME_BODY )
         theme = current_theme.get_attribute("class")
         return "dark-mode" if "dark-mode" in theme else "light-mode"
 
     def theme_switcher(self):
-        switcher = self.driver.find_element(*self.theme_switcher_locator)
+        switcher = self.driver.find_element( *self.THEME_SWITCHER )
         self.driver.execute_script("arguments[0].click();", switcher)
 
     def get_language(self):
-        global_language_button = self.driver.find_element(*self.language_button_locator)
+        global_language_button = self.driver.find_element( *self.LANGUAGE_BUTTON )
         global_language_button.click()
 
     def change_language_to_ua(self):
         ua_language = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable(self.ua_language_locator)
+            EC.element_to_be_clickable( self.UA_LANGUAGE )
         )
         ua_language.click()
 
@@ -255,7 +256,7 @@ class StartEpamPage(BasePage):
 
     def scroll_click_submit_button(self):
         try:
-            submit_btn = self.driver.find_element(*self.button_submit_contact_locator)
+            submit_btn = self.driver.find_element( *self.SUBMIT_CONTACT_BUTTON )
             self.scroll_to_element(submit_btn)
             submit_btn.click()
 
@@ -281,7 +282,7 @@ class StartEpamPage(BasePage):
     def click_on_logo(self):
         try:
             logo = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.logo_locator)
+                EC.element_to_be_clickable( self.LOGO )
             )
             logo.click()
             print(f"Logo clicked successfully.")
@@ -305,7 +306,7 @@ class StartEpamPage(BasePage):
             print(f"{target_text} not found")
 
     def click_on_button(self, button_name):
-        button = self.driver.find_elements(*self.button_locator)
+        button = self.driver.find_elements( *self.BUTTON )
         button_element = None
 
         for btn_element in button:

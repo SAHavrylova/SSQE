@@ -17,3 +17,6 @@ pytest.ini - markers fot tests
 pytest -m check // Start the test that involves checking markers
 pytest -m sa -s // With logger
 pytest -n 2 test_example.py // Start the test o 2 browsers
+
+# Command for reports
+pytest --html=report.html --self-contained-html
