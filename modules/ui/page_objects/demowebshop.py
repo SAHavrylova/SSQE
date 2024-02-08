@@ -8,7 +8,6 @@ from selenium.webdriver.support.ui import Select
 
 
 class LocatorsStartShopPage:
-    generated_emails = []
     REGISTER_BUTTON = (By.CLASS_NAME, "ico-register")
     REGISTER_TITLE = (By.CLASS_NAME, "page-title")
     required_fields = {
@@ -34,12 +33,13 @@ class LocatorsStartShopPage:
     DISPLAY = (By.CLASS_NAME, "product-page-size")
     DISPLAY_BY = (By.ID, "products-pagesize")
     DISPLAY_PAGER = (By.CLASS_NAME, "pager")
-    ADD_CARD_BUTTON= (By.CLASS_NAME, "button-2.product-box-add-to-cart-button")
+    ADD_CARD_BUTTON = (By.CLASS_NAME, "button-2.product-box-add-to-cart-button")
 
 
 class StartShopPage(BasePage):
 
     URL = "https://demowebshop.tricentis.com/"
+    generated_emails = []
 
     def __init__(self) -> None:
         super().__init__()
@@ -76,7 +76,7 @@ class StartShopPage(BasePage):
     def generate_email(self):
         unique_id = str(uuid.uuid4())[:8]
         generated_email = f"sa{unique_id}@test.new.com"
-        self.locators.generated_emails.append(generated_email)
+        self.generated_emails.append(generated_email)
         return generated_email
 
     def click_on_submit(self):
@@ -168,7 +168,8 @@ class StartShopPage(BasePage):
 
     def click_menu_item(self, choose_categories_element):
         try:
-            category_element = self.driver.find_element(By.XPATH, f'//a[contains(text(),"{choose_categories_element}")]')
+            category_element = self.driver.find_element(By.XPATH, f'//a[contains(text(),'
+                                                                  f'"{choose_categories_element}")]')
         
             actions = ActionChains(self.driver)
             actions.move_to_element(category_element).click().perform()
@@ -222,13 +223,13 @@ class StartShopPage(BasePage):
                 price_element = item.find_element(By.CLASS_NAME, "actual-price")
                 price = float(price_element.text.replace("$", ""))
 
-                print(f"Title: {title}, Price: {price}") # if need to see result
+                print(f"Title: {title}, Price: {price}")  # If you need to see result
                 print("Sorted successfully")
 
         except Exception as e:
             print("Error while verifying prices by title:", e)
     
-    def sort_by_dispalays(self, choose_page_size):
+    def sort_by_displays(self, choose_page_size):
         try:
             display = self.driver.find_element(*self.locators.DISPLAY_BY)
             display.click()
