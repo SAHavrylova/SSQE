@@ -5,7 +5,6 @@ from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-
 class BasePage:
     def __init__(self) -> None:
         self.driver = WebDriverSingleton().get_driver()
@@ -13,36 +12,40 @@ class BasePage:
     def quit_driver(self):
         WebDriverSingleton._destroy_instance()
 
-    def element_is_visible(self, locator, timeout=5):
+    '''def __init__(self, driver, url):
+        self.driver = driver
+        self.url = url
+
+    def open(self):
+        self.driver.get(self.url)
+    '''
+
+    def title_is(self, locator, timeout = 5):
+        return wait(self.driver, timeout).until(EC.title_is(locator))
+
+    def element_is_visible(self, locator, timeout = 5):
         return wait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
 
-    def element_are_visible(self, locator, timeout=5):
+    def element_are_visible(self, locator, timeout = 5):
         return wait(self.driver, timeout).until(EC.visibility_of_all_elements_located(locator))
 
-    def element_is_present(self, locator, timeout=5):
+    def element_is_present(self, locator, timeout = 5):
         return wait(self.driver, timeout).until(EC.presence_of_element_located(locator))
 
-    def element_are_present(self, locator, timeout=5):
+    def element_are_present(self, locator, timeout = 5):
         return wait(self.driver, timeout).until(EC.presence_of_all_elements_located(locator))
 
-    def element_is_not_visible(self, locator, timeout=5):
+    def element_is_not_visible(self, locator, timeout = 5):
         return wait(self.driver, timeout).until(EC.invisibility_of_element_located(locator))
 
-    def element_is_clickable(self, locator, timeout=5):
+    def element_is_clickable(self, locator, timeout = 5):
         return wait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
 
     def go_to_element(self, element):
         self.driver.execute_script(f"arguments[0].scrollIntoView();", element)
 
-    def wait_until(self, condition, timeout=5):
+    def wait_until(self, condition, timeout = 5):
         return wait(self.driver, timeout).until(condition)
-
-    '''def open(self):
-        with allure.step(f"Open {self.PAGE_URL} page")
-            self.driver.get(self.PAGE.URL)'''
-
-    '''def is_opened(self):
-        self.wait_until(EC.url_to_be(self.PAGE_URL))'''
 
     def click_element(self, locator):
         try:
@@ -62,4 +65,3 @@ class BasePage:
             name=screenshot_name,
             attachment_type=AttachmentType.PNG
         )'''
-

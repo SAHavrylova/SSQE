@@ -10,14 +10,15 @@ from modules.ui.page_objects.demowebshop import StartShopPage
 from modules.ui.page_objects.saucedemo import StartSaucedemo
 from utils.webdriver_singleton import WebDriverSingleton
 
-@pytest.fixture(scope="function")
+
+'''
+@pytest.fixture(scope = "function")
 def driver():
     driver = WebDriverSingleton()
     driver.maximize_window()
     yield driver
     driver.quit()
-
-
+'''
 
 
 @pytest.fixture(scope="module")
@@ -30,7 +31,7 @@ def start_page_epam_instance():
     start_page.quit_driver()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope = "module")
 def start_demoshop_instance():
     shop_page = StartShopPage()
     shop_page.go_to_shop()
@@ -40,7 +41,7 @@ def start_demoshop_instance():
     shop_page.quit_driver()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope = "module")
 def start_sauce_instance():
     sauce_page = StartSaucedemo()
     sauce_page.go_to_saucedemo()
@@ -61,7 +62,7 @@ def sauce_signin(start_sauce_instance):
     return start_sauce_instance
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope = "session")
 def sauce_user_creds():
     with open("sauce_creds.json", "r") as file:
         data = json.load(file)
@@ -111,4 +112,3 @@ def _capture_screenshot(name):
 def pytest_html_report_title(report):
     report.title = "SSQE report"
 '''
-

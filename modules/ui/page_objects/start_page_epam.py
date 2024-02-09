@@ -6,13 +6,13 @@ import os
 
 
 class LocatorsStartEpamPage:
-    LOGO = (By.CLASS_NAME, "header__logo-container")
+    LOGO = (By.CSS_SELECTOR, "a.header__logo-container")
     CURRENT_THEME_BODY = (By.CLASS_NAME, 'fonts-loaded')
     THEME_SWITCHER = (By.CSS_SELECTOR, ".theme-switcher")
     LANGUAGE_BUTTON = (By.CLASS_NAME, 'location-selector__button')
     UA_LANGUAGE = (By.XPATH, '//a[@class="location-selector__link" and @href="https://careers.epam.ua"]')
-    FOOTER = (By.CLASS_NAME, "footer-container")
-    FOOTER_TITLE = (By.CLASS_NAME, 'policies')
+    FOOTER = (By.CSS_SELECTOR, ".footer-container")
+    FOOTER_TITLE = (By.CSS_SELECTOR, '.policies')
     SCROLL_TO = (By.CLASS_NAME, "text-ui-23")
     LOCATIONS_CAROUSEL = (By.CSS_SELECTOR, '.tabs-23__item.js-tabs-item.active')
     CURRENT_OUR_LOCATION_BUTTON = (By.CLASS_NAME, "locations-viewer-23__country-btn")
@@ -28,7 +28,7 @@ class LocatorsStartEpamPage:
 class StartEpamPage(BasePage):
     URL = "https://www.epam.com/"
 
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__()
         self.locators = LocatorsStartEpamPage()
 
@@ -39,19 +39,9 @@ class StartEpamPage(BasePage):
         script = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"
         self.driver.execute_script(script, element)
 
-    def load_page(self, timeout_seconds = 3):
-        wait = WebDriverWait(self.driver, timeout_seconds)
-        wait.until(lambda driver: True)
-
-    def wait_for_page_load(self, timeout_seconds = 10):
-        WebDriverWait(self.driver, timeout_seconds).until(
-            EC.presence_of_element_located((By.TAG_NAME, "body")))
-
     def check_epam_title(self, exp_title):
         try:
-            epam_title = WebDriverWait(self.driver, 5).until(
-                EC.title_is(exp_title)
-            )
+            epam_title = self.title_is(exp_title)
             print("Title return successfully.")
             return self.driver.title == exp_title
 
@@ -72,10 +62,8 @@ class StartEpamPage(BasePage):
         global_language_button.click()
 
     def change_language_to_ua(self):
-        ua_language = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable(self.locators.UA_LANGUAGE)
-        )
-        ua_language.click()
+        ua_language = self.element_is_clickable(self.locators.UA_LANGUAGE).click()
+        return ua_language
 
     def language(self, choose_language):
         language_items = self.driver.find_element(By.CLASS_NAME, "location-selector__item")
@@ -332,3 +320,9 @@ class StartEpamPage(BasePage):
         expected_file = "EPAM_Corporate_Overview_Q3_october.pdf"
 
         assert expected_file in downloaded_files, f"File {expected_file} not found in downloads directory"
+
+
+class FooterEpam(BasePage):
+    def __init__(self) -> None:
+        super().__init__()
+        self.locators = LocatorsStartEpamPage()
