@@ -66,20 +66,18 @@ def test_check_the_search_function(start_page_epam_instance):
 
 
 @pytest.mark.epamui
-def test_check_form_fields_validation():
-    contact = AboutEpamPage()
-    contact.go_to_contact()
-    contact.scroll_click_submit_button()
+def test_check_form_fields_validation(contact_page_epam_instance):
+    contact_page_epam_instance.scroll_click_submit_button()
     fields_to_validate = [
-        ("Select the Reason for Your Inquiry*"),
-        ("Last Name*"),
-        ("First Name*"),
-        ("Email*"),
-        ("Phone*"),
-        ("How did you hear about EPAM?*")
+        "Select the Reason for Your Inquiry*",
+        "Last Name*",
+        "First Name*",
+        "Email*",
+        "Phone*",
+        "How did you hear about EPAM?*"
     ]
     for expected_name in fields_to_validate:
-        contact.validation_field(expected_name)
+        contact_page_epam_instance.validation_field(expected_name)
 
 
 @pytest.mark.epamui

@@ -5,6 +5,7 @@ import random
 import webdriver_manager.drivers.chrome
 
 from modules.api.clients.petstore_user import Petstore
+from modules.ui.page_objects.contact_page_epam import ContactEpamPage
 from modules.ui.page_objects.epam_about import AboutEpamPage
 from modules.ui.page_objects.start_page_epam import StartEpamPage
 from modules.ui.page_objects.demowebshop import StartShopPage
@@ -31,6 +32,7 @@ def start_page_epam_instance():
 
     start_page.quit_driver()
 
+
 @pytest.fixture(scope="module")
 def about_page_epam_instance():
     about_page = AboutEpamPage()
@@ -40,6 +42,15 @@ def about_page_epam_instance():
 
     about_page.quit_driver()
 
+
+@pytest.fixture(scope="module")
+def contact_page_epam_instance():
+    contact_page = ContactEpamPage()
+    contact_page.go_to_contact()
+
+    yield contact_page
+
+    contact_page.quit_driver()
 
 @pytest.fixture(scope = "module")
 def start_demoshop_instance():
