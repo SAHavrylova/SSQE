@@ -90,7 +90,7 @@ def test_that_logo_lead_to_main(about_page_epam_instance):
 
 @pytest.mark.epamui
 def test_that_allows_to_download_report(about_page_epam_instance):
-    about_page_epam_instance.scroll_to_element("a Glance")
-    about_page_epam_instance.click_on_button("DOWNLOAD")
+    about_page_epam_instance.scroll_to_visible_element("a Glance")
+    about_page_epam_instance.click_specific_button("DOWNLOAD")
     time.sleep(4)
-    about_page_epam_instance.download_file()
+    about_page_epam_instance.download_document()
