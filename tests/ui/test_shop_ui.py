@@ -1,48 +1,48 @@
 import pytest
 import time
 import random
-from modules.ui.page_objects.demowebshop import StartShopPage
+
 
 
 @pytest.mark.demoshop
 def test_that_allows_sign_up(start_demoshop_instance):
-    start_demoshop_instance.click_on_signup()
-    start_demoshop_instance.fill_required_input("FirstName", "SA")
-    start_demoshop_instance.fill_required_input("LastName", "Test")
+    start_demoshop_instance.open_register_page()
+    start_demoshop_instance.fill_required_form_field("FirstName", "SA")
+    start_demoshop_instance.fill_required_form_field("LastName", "Test")
     generated_email = start_demoshop_instance.generate_email()
-    start_demoshop_instance.fill_required_input("Email", generated_email)
-    start_demoshop_instance.fill_required_input("Password", "SAnewTest")
-    start_demoshop_instance.fill_required_input("ConfirmPassword", "SAnewTest")
-    with open('generated_emails.txt', 'a') as file: #"w" - rewrite "a" - eppend
+    start_demoshop_instance.fill_required_form_field("Email", generated_email)
+    start_demoshop_instance.fill_required_form_field("Password", "SAnewTest")
+    start_demoshop_instance.fill_required_form_field("ConfirmPassword", "SAnewTest")
+    with open('generated_emails.txt', 'a') as file:  # "w" - rewrite "a" - append
         for email in start_demoshop_instance.generated_emails:
             file.write(email + '\n')
-    start_demoshop_instance.click_on_submit()
+    start_demoshop_instance.submit_register_form()
     start_demoshop_instance.registration_result("Your registration completed")
 
 @pytest.mark.demoshop
 def test_that_allows_login(start_demoshop_instance):
-    start_demoshop_instance.click_on_login()
+    start_demoshop_instance.open_login_page()
     with open('generated_emails.txt', 'r') as file:
         generated_emails = file.readlines()
     random_email = random.choice(generated_emails).strip()
-    start_demoshop_instance.fill_required_input("Email", random_email)
-    start_demoshop_instance.fill_required_input("Password", "SAnewTest")
-    start_demoshop_instance.click_on_submit_login()
+    start_demoshop_instance.fill_required_form_field("Email", random_email)
+    start_demoshop_instance.fill_required_form_field("Password", "SAnewTest")
+    start_demoshop_instance.submit_login_form()
     start_demoshop_instance.verify_logout_text("Log out")
 
 @pytest.mark.demoshop
 def test_verify_that_computers_have_3_subgroups(start_demoshop_instance):
-    start_demoshop_instance.move_to_element()
+    start_demoshop_instance.verify_computers_sub_groups()
 
 @pytest.mark.demoshop
 def test_that_allows_sorting_items(start_demoshop_instance):
-    start_demoshop_instance.click_on_login()
+    start_demoshop_instance.open_login_page()
     with open('generated_emails.txt', 'r') as file:
         generated_emails = file.readlines()
     random_email = random.choice(generated_emails).strip()
-    start_demoshop_instance.fill_required_input("Email", random_email)
-    start_demoshop_instance.fill_required_input("Password", "SAnewTest")
-    start_demoshop_instance.click_on_categories_with_sub_groups("Desktops")
+    start_demoshop_instance.fill_required_form_field("Email", random_email)
+    start_demoshop_instance.fill_required_form_field("Password", "SAnewTest")
+    start_demoshop_instance.open_category_with_subgroups("Desktops")
     start_demoshop_instance.sort_by_option("Price: Low to High")
     start_demoshop_instance.verify_by_title()
     start_demoshop_instance.sort_by_option("Price: High to Low")
@@ -54,13 +54,13 @@ def test_that_allows_sorting_items(start_demoshop_instance):
 
 @pytest.mark.demoshop
 def test_that_allows_changing_number_on_page(start_demoshop_instance):
-    start_demoshop_instance.click_on_login()
+    start_demoshop_instance.open_login_page()
     with open('generated_emails.txt', 'r') as file:
         generated_emails = file.readlines()
     random_email = random.choice(generated_emails).strip()
-    start_demoshop_instance.fill_required_input("Email", random_email)
-    start_demoshop_instance.fill_required_input("Password", "SAnewTest")
-    start_demoshop_instance.click_on_categories_with_sub_groups("Desktops")
+    start_demoshop_instance.fill_required_form_field("Email", random_email)
+    start_demoshop_instance.fill_required_form_field("Password", "SAnewTest")
+    start_demoshop_instance.open_category_with_subgroups("Desktops")
     start_demoshop_instance.sort_by_dispalays("4")
     start_demoshop_instance.verify_pagination_and_items()
     start_demoshop_instance.sort_by_dispalays("12")
@@ -68,12 +68,12 @@ def test_that_allows_changing_number_on_page(start_demoshop_instance):
 
 @pytest.mark.demoshop
 def test_that_allows_adding_an_item_to_the_card(start_demoshop_instance):
-    start_demoshop_instance.click_on_login()
+    start_demoshop_instance.open_login_page()
     with open('generated_emails.txt', 'r') as file:
         generated_emails = file.readlines()
     random_email = random.choice(generated_emails).strip()
-    start_demoshop_instance.fill_required_input("Email", random_email)
-    start_demoshop_instance.fill_required_input("Password", "SAnewTest")
+    start_demoshop_instance.fill_required_form_field("Email", random_email)
+    start_demoshop_instance.fill_required_form_field("Password", "SAnewTest")
     start_demoshop_instance.click_menu_item("Books")
 
 

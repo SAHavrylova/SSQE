@@ -8,23 +8,31 @@ from selenium.webdriver.support.ui import Select
 
 
 class LocatorsStartShopPage:
-    REGISTER_BUTTON = (By.CLASS_NAME, "ico-register")
-    REGISTER_TITLE = (By.CLASS_NAME, "page-title")
-    required_fields = {
-        "FirstName": (By.ID, "FirstName"),
-        "LastName": (By.ID, "LastName"),
-        "Email": (By.ID, "Email"),
-        "Password": (By.ID, "Password"),
-        "ConfirmPassword": (By.ID, "ConfirmPassword"),
+    # register page
+    REGISTER_BUTTON = (By.CSS_SELECTOR, 'a[class="ico-register"]')
+    REQUIRED_FIELDS = {
+        "FirstName": (By.CSS_SELECTOR, 'input[id="FirstName"]'),
+        "LastName": (By.CSS_SELECTOR, 'input[id="LastName"]'),
+        "Email": (By.CSS_SELECTOR, 'input[id="Email"]'),
+        "Password": (By.CSS_SELECTOR, 'input[id="Password"]'),
+        "ConfirmPassword": (By.CSS_SELECTOR, 'input[id="ConfirmPassword"]'),
     }
-    SUBMIT_BUTTON = (By.ID, "register-button")
-    SIGNUP_RESULT = (By.CLASS_NAME, "result")
-    LOGIN_BUTTON = (By.CLASS_NAME, "ico-login")
-    SUBMIT_LOGIN_BUTTON = (By.CLASS_NAME, "login-button")
-    LOGOUT_BUTTON = (By.CLASS_NAME, "ico-logout")
-    TOP_MENU = (By.CLASS_NAME, "top-menu")
+    SUBMIT_REGISTER_BUTTON = (By.CSS_SELECTOR, 'input[id="register-button"]')
+    SIGNUP_RESULT = (By.CSS_SELECTOR, 'div[class="result"]')
+
+    # login page
+    LOGIN_BUTTON = (By.CSS_SELECTOR, 'a[class="ico-login"]')
+    SUBMIT_LOGIN_BUTTON = (By.CSS_SELECTOR, 'input[class="button-1 login-button"]')
+
+    # logout page
+    LOGOUT_BUTTON = (By.CSS_SELECTOR, 'a[class="ico-logout"]')
+
+    # main page
     COMPUTERS_TAB = (By.XPATH, "//a[contains(text(),'Computers')]")
-    SUB_GROUPS = (By.CLASS_NAME, "sublist")
+    SUB_GROUPS = (By.XPATH, '//ul[contains(@class, "sublist") and contains(@class, "firstLevel") '
+                            'and contains(@class, "active")]')
+
+    # sort option
     SORTING = (By.CLASS_NAME, "product-sorting")
     SORT_BY = (By.ID, "products-orderby")
     PRODUCT_GRID = (By.CLASS_NAME, "product-grid")
@@ -38,7 +46,7 @@ class LocatorsStartShopPage:
 
 class StartShopPage(BasePage):
 
-    URL = "https://demowebshop.tricentis.com/"
+    URL = 'https://demowebshop.tricentis.com/'
     generated_emails = []
 
     def __init__(self) -> None:
@@ -48,25 +56,15 @@ class StartShopPage(BasePage):
     def go_to_shop(self):
         self.driver.get(StartShopPage.URL)
     
-    def click_on_signup(self):
-        try:
-            register = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.locators.REGISTER_BUTTON)
-            )
-            register.click()
-        
-        except Exception as e:
-            print(f"Error clicking on register: {str(e)}")
+    def open_register_page(self):
+        self.element_is_visible(self.locators.REGISTER_BUTTON).click()
     
-    def fill_required_input(self, input_name, signup_text):
+    def fill_required_form_field(self, input_name, signup_text):
         try:
-            if input_name in self.locators.required_fields:
-                required_field = self.locators.required_fields[input_name]
-                field_element = WebDriverWait(self.driver, 10).until(
-                    EC.visibility_of_element_located(required_field)
-                )
-                field_element.send_keys(signup_text)
-                print(f"CLicked and filled on {input_name} input successfully")
+            if input_name in self.locators.REQUIRED_FIELDS:
+                required_field = self.locators.REQUIRED_FIELDS[input_name]
+                field_element = self.element_is_visible(required_field).send_keys(signup_text)
+                return field_element
             else:
                 print(f"{input_name} not found")
             
@@ -79,19 +77,12 @@ class StartShopPage(BasePage):
         self.generated_emails.append(generated_email)
         return generated_email
 
-    def click_on_submit(self):
-        try:
-            confirm_register = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.locators.SUBMIT_BUTTON)
-            )
-            confirm_register.click()
-        
-        except Exception as e:
-            print(f"Error clicking on confirm register: {str(e)}")
+    def submit_register_form(self):
+        self.element_is_visible(self.locators.SUBMIT_REGISTER_BUTTON).click()
 
     def clear_all_input_fields(self):
         try:
-            for input_name, locator in self.locators.required_fields.items():
+            for input_name, locator in self.locators.REQUIRED_FIELDS.items():
                 field_element = self.driver.find_element(*locator)
                 field_element.clear()
                 print(f"Cleared {input_name} input successfully")
@@ -99,69 +90,28 @@ class StartShopPage(BasePage):
             print(f"Error clearing input fields: {str(e)}")
 
     def registration_result(self, result_text):
-        try:
-            register_success = WebDriverWait(self.driver, 5).until(
-                EC.visibility_of_element_located(self.locators.SIGNUP_RESULT)
-            )
-            actual_result_text = register_success.text.strip()
+        actual_result = self.element_is_visible(self.locators.SIGNUP_RESULT).text
+        return actual_result == result_text
 
-            if actual_result_text == result_text:
-                print(f"Registration successful with message: {result_text}")
-                return True
-            else:
-                print(f"Registration failed. Expected: {result_text}, Actual: {actual_result_text}")
-                return False
-            
-        except Exception as e:
-            print(f"Error occurred while checking registration result: {e}")
-            return False
-
-    def click_on_login(self):
-        try:
-            login = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.locators.LOGIN_BUTTON)
-            )
-            login.click()
-        
-        except Exception as e:
-            print(f"Error clicking on login: {str(e)}")
+    def open_login_page(self):
+        self.element_is_visible(self.locators.LOGIN_BUTTON).click()
     
-    def click_on_submit_login(self):
-        try:
-            confirm_login = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.locators.SUBMIT_LOGIN_BUTTON)
-            )
-            confirm_login.click()
-        
-        except Exception as e:
-            print(f"Error clicking on confirm register: {str(e)}")
+    def submit_login_form(self):
+        self.element_is_visible(self.locators.SUBMIT_LOGIN_BUTTON).click()
 
     def verify_logout_text(self, expected_text):
-        try:
-            logout_element = WebDriverWait(self.driver, 10).until(
-                EC.visibility_of_element_located(self.locators.LOGOUT_BUTTON)
-            )
+        actual_result = self.element_is_visible(self.locators.LOGOUT_BUTTON).text
+        return actual_result == expected_text
 
-            actual_text = logout_element.text
+    def verify_computers_sub_groups(self):
+        computers_tab = self.element_is_present(self.locators.COMPUTERS_TAB)
+        self.action_move_to_element(computers_tab)
+        sub_groups_text = self.element_is_visible(self.locators.SUB_GROUPS)
 
-            assert actual_text == expected_text
-            print("Logout text verified successfully.")
+        sub_list = sub_groups_text.find_elements(By.TAG_NAME, "a")
 
-        except Exception as e:
-            print(f"Error verifying logout text: {str(e)}")
-    
-    def move_to_element(self):
-        computers_element = self.driver.find_element(*self.locators.COMPUTERS_TAB)
-        actions = ActionChains(self.driver)
-        actions.move_to_element(computers_element).perform()
-        sub_groups = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located(*self.locators.SUB_GROUPS)
-        )
-
-        sub_list = sub_groups.find_elements(By.TAG_NAME, "a")
-        
         assert len(sub_list) == 3
-        
+
         sub_categories = [item.text for item in sub_list]
         expected_categories = ["Desktops", "Notebooks", "Accessories"]
         assert sub_categories == expected_categories
@@ -178,15 +128,12 @@ class StartShopPage(BasePage):
         except Exception as e:
             print("Error while clicking:", e)
 
-    def click_on_categories_with_sub_groups(self, sub_groups_name):
-        computers_element = self.driver.find_element(*self.locators.COMPUTERS_TAB)
-        actions = ActionChains(self.driver)
-        actions.move_to_element(computers_element).perform()
-        sub_groups = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located(self.locators.SUB_GROUPS)
-        )
+    def open_category_with_subgroups(self, sub_groups_name):
+        computers_tab = self.element_is_present(self.locators.COMPUTERS_TAB)
+        self.action_move_to_element(computers_tab)
+        sub_groups_text = self.element_is_visible(self.locators.SUB_GROUPS)
 
-        sub_list = sub_groups.find_elements(By.TAG_NAME, "a")
+        sub_list = sub_groups_text.find_elements(By.TAG_NAME, "a")
 
         for item in sub_list:
             if item.text == sub_groups_name:
@@ -194,7 +141,8 @@ class StartShopPage(BasePage):
                 break
     
     def sort_by_option(self, choose_sort):
-        try:
+        self.element_is_visible(self.locators.SORT_BY).click()
+        '''try:
             sort = self.driver.find_element(*self.locators.SORT_BY)
             sort.click()
 
@@ -208,6 +156,7 @@ class StartShopPage(BasePage):
         except Exception as e:
             print("Error while sorting:", e)
             return False
+        '''
 
     def verify_by_title(self):
         try:

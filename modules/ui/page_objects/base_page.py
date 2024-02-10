@@ -1,5 +1,7 @@
 import allure
 from allure_commons.types import AttachmentType
+from selenium.webdriver import ActionChains
+
 from utils.webdriver_singleton import WebDriverSingleton
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
@@ -54,10 +56,12 @@ class BasePage:
         except Exception as e:
             print(f"An error occurred while clicking the element: {str(e)}")
 
-    def enter_text(self, locator, text):
-        input_field = self.wait_until(EC.visibility_of_element_located(locator))
-        input_field.clear()
-        input_field.send_keys(text)
+    def action_move_to_element(self, element):
+        action = ActionChains(self.driver)
+        action.move_to_element(element)
+        action.perform()
+
+
 
     '''def make_screenshot(self, screenshot_name):
         allure.attach(
