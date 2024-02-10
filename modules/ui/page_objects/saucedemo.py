@@ -7,9 +7,9 @@ import logging
 
 
 class LocatorsStartSauceDemoShop:
-    USERNAME_FIELD = (By.ID, "user-name")
-    PASSWORD_FIELD = (By.ID, "password")
-    LOGIN_BUTTON = (By.ID, "login-button")
+    USERNAME_FIELD = (By.CSS_SELECTOR, 'input[id="user-name"]')
+    PASSWORD_FIELD = (By.CSS_SELECTOR, 'input[id="password"]')
+    LOGIN_BUTTON = (By.CSS_SELECTOR, 'input[id="login-button"]')
     CONTINUE_BUTTON = (By.ID, "continue")
     FINISH_ORDER_BUTTON = (By.ID, "finish")
     HEADER_ITEM = (By.CLASS_NAME, "header_label")
@@ -47,25 +47,20 @@ class StartSaucedemo(BasePage):
     def go_to_saucedemo(self):
         self.driver.get(StartSaucedemo.URL)
 
-    def click_on_username_field(self, username):
-        username_element = self.driver.find_element(*self.USERNAME_FIELD)
-        username_element.click()
-        username_element.send_keys(username)
+    def enter_username(self, username):
+        self.element_is_visible(self.locators.USERNAME_FIELD).send_keys(username)
 
-    def click_on_password_field(self):
-        password_element = self.driver.find_element(*self.password_field_locator)
-        password_element.click()
-        password_element.send_keys("secret_sauce")
+    def enter_password(self):
+        self.element_is_visible(self.locators.PASSWORD_FIELD).send_keys("secret_sauce")
 
     def click_on_login_button(self):
-        login_element = self.driver.find_element(*self.LOGIN_BUTTON)
-        login_element.click()
+        self.element_is_visible(self.locators.LOGIN_BUTTON).click()
 
     def verify_header_label(self, exp_header_label_text):
-        header_labels = self.driver.find_elements(*self.HEADER_ITEM)
+        header_labels = self.driver.find_elements(*self.locators.HEADER_ITEM)
 
         for header_label in header_labels:
-            header_link = header_label.find_element(*self.header_title_locator)
+            header_link = header_label.find_element(*self.locators.HEADER_TITLE)
             link_text = header_link.text
             if link_text == exp_header_label_text:
                 return True
@@ -103,12 +98,12 @@ class StartSaucedemo(BasePage):
     def verify_product_info(self):
         elements_present = True
         try:
-            self.driver.find_elements(*self.INVENTORY_DETAILS_CONTAINER)
-            self.driver.find_elements(*self.inventory_details_img_locator)
-            self.driver.find_elements(*self.inventory_details_name_locator)
-            self.driver.find_elements(*self.inventory_details_description_locator)
-            self.driver.find_elements(*self.inventory_details_price_locator)
-            self.driver.find_elements(*self.ADD_TO_CART_BUTTON)
+            self.driver.find_elements(*self.locators.INVENTORY_DETAILS_CONTAINER)
+            self.driver.find_elements(*self.locators.inventory_details_img_locator)
+            self.driver.find_elements(*self.locators.inventory_details_name_locator)
+            self.driver.find_elements(*self.locators.inventory_details_description_locator)
+            self.driver.find_elements(*self.locators.inventory_details_price_locator)
+            self.driver.find_elements(*self.locators.ADD_TO_CART_BUTTON)
         except:
             elements_present = False
 
@@ -119,7 +114,7 @@ class StartSaucedemo(BasePage):
 
     def click_on_back_to(self):
         try:
-            self.click_element(self.BACK_TO_PRODUCTS_BUTTON)
+            self.click_element(self.locators.BACK_TO_PRODUCTS_BUTTON)
         except Exception as e:
             print(f"An error occurred while clicking on 'Back to products': {str(e)}")
 
@@ -148,7 +143,7 @@ class StartSaucedemo(BasePage):
         return StartSaucedemo.added_items
 
     def click_on_shopping_cart(self):
-        shopping = self.driver.find_element(*self.SHOPPING_CART)
+        shopping = self.driver.find_element(*self.locators.SHOPPING_CART)
         shopping.click()
 
     def get_cart_items(self):
@@ -183,8 +178,8 @@ class StartSaucedemo(BasePage):
             print(f"An error occurred while verifying checkout information: {str(e)}")
             return False
 
-    def enter_username(self, first_name):
-        firstname_locator = self.FIRST_NAME_FIELD
+    def enter_firstname(self, first_name):
+        firstname_locator = self.locators.FIRST_NAME_FIELD
         self.enter_text(firstname_locator, first_name)
 
     def enter_lastname(self, last_name):

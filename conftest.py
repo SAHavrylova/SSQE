@@ -74,10 +74,10 @@ def start_sauce_instance():
 
 @pytest.fixture
 def sauce_signin(start_sauce_instance):
-    with open("sauce_username.txt", "r") as file:
+    with open("tests/ui/sauce_username.txt", "r") as file:
         sauce_usernames = file.readlines()
     random_username = random.choice(sauce_usernames).strip()
-    start_sauce_instance.click_on_username_field(random_username)
+    start_sauce_instance.enter_loginname(random_username)
     start_sauce_instance.click_on_password_field()
     start_sauce_instance.click_on_login_button()
     return start_sauce_instance
