@@ -1,26 +1,34 @@
+import random
+import logging
 from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
-import logging
 
 
 class LocatorsStartSauceDemoShop:
     USERNAME_FIELD = (By.CSS_SELECTOR, 'input[id="user-name"]')
     PASSWORD_FIELD = (By.CSS_SELECTOR, 'input[id="password"]')
     LOGIN_BUTTON = (By.CSS_SELECTOR, 'input[id="login-button"]')
+    PRODUCT_NAME = (By.XPATH, '//div[@class="inventory_item_name" and text()="{}"]')
+    SPECIFIC_PRODUCT = (
+        By.CSS_SELECTOR, f"div[class='inventory_item_label'] a[id='item_{random.randint(0, 5)}_title_link']")
+    INVENTORY_DETAILS_CONTAINER = (By.CSS_SELECTOR, 'div[class="inventory_details_container"]')
+    INVENTORY_DETAILS_IMG = (By.CSS_SELECTOR, 'img[class="inventory_details_img"]')
+    INVENTORY_DETAILS_NAME = (By.CSS_SELECTOR, 'div[class="inventory_details_name large_size"]')
+    INVENTORY_DETAILS_DESCRIPTION = (By.CSS_SELECTOR, 'div[class="inventory_details_desc large_size"]')
+    INVENTORY_DETAILS_PRICE = (By.CSS_SELECTOR, "div[class='inventory_details_price']")
+    ADD_TO_CART_BUTTON = (By.XPATH, "//button[text()='Add to cart']")
+    BACK_TO_PRODUCTS_BUTTON = (By.CSS_SELECTOR, 'button[id="back-to-products"]')
+
+
+
     CONTINUE_BUTTON = (By.ID, "continue")
     FINISH_ORDER_BUTTON = (By.ID, "finish")
     HEADER_ITEM = (By.CLASS_NAME, "header_label")
     HEADER_TITLE = (By.CLASS_NAME, "app_logo")
-    INVENTORY_DETAILS_CONTAINER = (By.CLASS_NAME, "inventory_details_container")
-    INVENTORY_DETAILS_IMG = (By.CLASS_NAME, "inventory_details_img")
-    INVENTORY_DETAILS_NAME = (By.CLASS_NAME, "inventory_details_name")
-    INVENTORY_DETAILS_DESCRIPTION = (By.CLASS_NAME, "inventory_details_desc")
-    INVENTORY_DETAILS_PRICE = (By.CLASS_NAME, "inventory_details_price")
-    ADD_TO_CART_BUTTON = (By.ID, "add-to-cart-sauce-labs-backpack")
-    BACK_TO_PRODUCTS_BUTTON = (By.ID, "back-to-products")
+
     SHOPPING_CART = (By.ID, "shopping_cart_container")
     CHECKOUT_BUTTON = (By.ID, "checkout")
     CHECKOUT_TITLE = (By.CLASS_NAME, "title")
@@ -36,7 +44,6 @@ class LocatorsStartSauceDemoShop:
 
 
 class StartSaucedemo(BasePage):
-
     URL = "https://www.saucedemo.com/"
     added_items = []
 
@@ -56,6 +63,12 @@ class StartSaucedemo(BasePage):
     def click_on_login_button(self):
         self.element_is_visible(self.locators.LOGIN_BUTTON).click()
 
+    def check_saucedemo_title(self, exp_title):
+        saucedemo_title = self.title_is(exp_title)
+        return saucedemo_title
+
+    '''
+    # Maybe for future use
     def verify_header_label(self, exp_header_label_text):
         header_labels = self.driver.find_elements(*self.locators.HEADER_ITEM)
 
@@ -65,6 +78,7 @@ class StartSaucedemo(BasePage):
             if link_text == exp_header_label_text:
                 return True
         return False
+    '''
 
     def verify_all_products(self):
         all_products = [
@@ -89,28 +103,22 @@ class StartSaucedemo(BasePage):
         return True
 
     def click_on_specific_product(self):
-        element = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.ID, "item_4_title_link"))
-        )
+        self.click_element(self.locators.SPECIFIC_PRODUCT)
 
-        element.click()
+    def verify_product_info_presence(self):
+        container = self.driver.find_elements(*self.locators.INVENTORY_DETAILS_CONTAINER)
+        img = self.driver.find_elements(*self.locators.INVENTORY_DETAILS_IMG)
+        name = self.driver.find_elements(*self.locators.INVENTORY_DETAILS_NAME)
+        description = self.driver.find_elements(*self.locators.INVENTORY_DETAILS_DESCRIPTION)
+        price = self.driver.find_elements(*self.locators.INVENTORY_DETAILS_PRICE)
+        add_to_cart_buttons = self.driver.find_elements(*self.locators.ADD_TO_CART_BUTTON)
 
-    def verify_product_info(self):
-        elements_present = True
-        try:
-            self.driver.find_elements(*self.locators.INVENTORY_DETAILS_CONTAINER)
-            self.driver.find_elements(*self.locators.inventory_details_img_locator)
-            self.driver.find_elements(*self.locators.inventory_details_name_locator)
-            self.driver.find_elements(*self.locators.inventory_details_description_locator)
-            self.driver.find_elements(*self.locators.inventory_details_price_locator)
-            self.driver.find_elements(*self.locators.ADD_TO_CART_BUTTON)
-        except:
-            elements_present = False
-
-        if elements_present:
-            print("All elements are present.")
-        else:
-            print("Some elements are missing.")
+        assert len(container) > 0, "Inventory details container not found"
+        assert len(img) > 0, "Inventory details image not found"
+        assert len(name) > 0, "Inventory details name not found"
+        assert len(description) > 0, "Inventory details description not found"
+        assert len(price) > 0, "Inventory details price not found"
+        assert len(add_to_cart_buttons) > 0, "Add to cart buttons not found"
 
     def click_on_back_to(self):
         try:
@@ -167,11 +175,11 @@ class StartSaucedemo(BasePage):
         print("All items verify successfully")
 
     def click_on_checkout_button(self):
-        self.click_element(self.CHECKOUT_BUTTON)
+        self.click_element(self.locators.CHECKOUT_BUTTON)
 
     def verify_checkout_information(self, checkout_info_text):
         try:
-            checkout_text_element = self.wait_until(EC.visibility_of_element_located(self.CHECKOUT_TITLE))
+            checkout_text_element = self.wait_until(EC.visibility_of_element_located(self.locators.CHECKOUT_TITLE))
             checkout_text = checkout_text_element.text
             return checkout_text == checkout_info_text
         except Exception as e:
@@ -183,27 +191,27 @@ class StartSaucedemo(BasePage):
         self.enter_text(firstname_locator, first_name)
 
     def enter_lastname(self, last_name):
-        lastname_locator = self.LAST_NAME_FIELD
+        lastname_locator = self.locators.LAST_NAME_FIELD
         self.enter_text(lastname_locator, last_name)
 
     def enter_postal_code(self, postal_code):
-        postalcode_locator = self.POSTAL_CODE
+        postalcode_locator = self.locators.POSTAL_CODE
         self.enter_text(postalcode_locator, postal_code)
 
     def click_on_continue_button(self):
-        self.click_element(self.continue_button_locator)
+        self.click_element(self.locators.continue_button_locator)
 
     def click_on_finish_button(self):
-        self.click_element(self.finish_button_locator)
+        self.click_element(self.locators.finish_button_locator)
 
     def click_on_sort_button(self):
-        self.click_element(*self.SORTING_BUTTON)
+        self.click_element(*self.locators.SORTING_BUTTON)
 
     def sort_product_by_option(self, choose_option):
         try:
             self.click_on_sort_button()
 
-            option_list = self.wait_until(EC.element_to_be_clickable(self.SORT_OPTIONS_DROPDOWN))
+            option_list = self.wait_until(EC.element_to_be_clickable(self.locators.SORT_OPTIONS_DROPDOWN))
             select = Select(option_list)
             select.select_by_visible_text(choose_option)
             return True
@@ -215,10 +223,10 @@ class StartSaucedemo(BasePage):
     def verify_sorted_order_by_name(self):
         try:
             inventory_list = self.wait_until(EC.presence_of_element_located(self.INVENTORY_LIST))
-            inventory_items = inventory_list.find_elements(*self.INVENTORY_ITEM)
+            inventory_items = inventory_list.find_elements(*self.locators.INVENTORY_ITEM)
 
             for item in inventory_items:
-                name_element = item.find_element(*self.INVENTORY_NAME)
+                name_element = item.find_element(*self.locators.INVENTORY_NAME)
                 name = name_element.text
 
                 print(f"Title: {name}")
@@ -229,11 +237,11 @@ class StartSaucedemo(BasePage):
 
     def verify_sorted_order_by_price(self):
         try:
-            inventory_list = self.wait_until(EC.presence_of_element_located(self.INVENTORY_LIST))
-            inventory_items = inventory_list.find_elements(*self.INVENTORY_ITEM)
+            inventory_list = self.wait_until(EC.presence_of_element_located(self.locators.INVENTORY_LIST))
+            inventory_items = inventory_list.find_elements(*self.locators.INVENTORY_ITEM)
 
             for item in inventory_items:
-                price_element = item.find_element(*self.INVENTORY_ITEM_PRICE)
+                price_element = item.find_element(*self.locators.INVENTORY_ITEM_PRICE)
                 price = price_element.text
 
                 print(f"Price: {price}")

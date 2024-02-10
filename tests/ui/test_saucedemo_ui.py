@@ -1,3 +1,5 @@
+import time
+
 import pytest
 import random
 
@@ -11,23 +13,29 @@ def test_login(start_sauce_instance):
 
     start_sauce_instance.enter_password()
     start_sauce_instance.click_on_login_button()
-    assert start_sauce_instance.verify_header_label("Swag Labs")
+    assert start_sauce_instance.check_saucedemo_title("Swag Labs")
 
 
 @pytest.mark.sauce
-def test_check_all_list_of_products(sauce_signin):
-    sauce_signin.verify_all_products()
+def test_check_all_list_of_products(start_sauce_instance):
+    start_sauce_instance.enter_username("standard_user")
+    start_sauce_instance.enter_password()
+    start_sauce_instance.click_on_login_button()
+    start_sauce_instance.verify_all_products()
+
+
 
 
 @pytest.mark.sauce
 def test_open_product_page(start_sauce_instance):
-    start_sauce_instance.enter_loginname("standard_user")
-    start_sauce_instance.click_on_password_field()
+    start_sauce_instance.enter_username("standard_user")
+    start_sauce_instance.enter_password()
     start_sauce_instance.click_on_login_button()
     start_sauce_instance.click_on_specific_product()
-    time.sleep(2)
-    start_sauce_instance.verify_product_info()
+    start_sauce_instance.verify_product_info_presence(), "Product info not found"
+
     start_sauce_instance.click_on_back_to()
+
 
 
 @pytest.mark.sauce

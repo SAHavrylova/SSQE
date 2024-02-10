@@ -9,7 +9,7 @@ class LocatorsAboutEpamPage:
     LOGO = (By.CSS_SELECTOR, "a.header__logo-container")
     SCROLL_TO = (By.CLASS_NAME, "text-ui-23")
     TEXT_ELEMENT = (By.XPATH, "//div[contains(@class, 'text-ui-23')]//*[contains(text(), '')]")
-    SPICIFIC_BUTTON = (By.CLASS_NAME, "button__content")
+    SPECIFIC_BUTTON = (By.CLASS_NAME, "button__content")
     BUTTON_TEXT = (By.XPATH, "//span[contains(@class, 'button__content') and text()='DOWNLOAD']")
 
 
@@ -48,7 +48,7 @@ class AboutEpamPage(BasePage):
             self.driver.execute_script("arguments[0].scrollIntoView();", scroll_element)
 
     def click_specific_button(self, button_name):
-        button = self.driver.find_elements(*self.locators.SPICIFIC_BUTTON)
+        button = self.driver.find_elements(*self.locators.SPECIFIC_BUTTON)
         button_element = None
 
         for btn_element in button:

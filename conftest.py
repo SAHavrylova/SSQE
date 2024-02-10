@@ -52,6 +52,7 @@ def contact_page_epam_instance():
 
     contact_page.quit_driver()
 
+
 @pytest.fixture(scope = "module")
 def start_demoshop_instance():
     shop_page = StartShopPage()
@@ -74,11 +75,11 @@ def start_sauce_instance():
 
 @pytest.fixture
 def sauce_signin(start_sauce_instance):
-    with open("tests/ui/sauce_username.txt", "r") as file:
+    with open('tests/ui/sauce_username.txt', "r") as file:
         sauce_usernames = file.readlines()
     random_username = random.choice(sauce_usernames).strip()
-    start_sauce_instance.enter_loginname(random_username)
-    start_sauce_instance.click_on_password_field()
+    start_sauce_instance.enter_username(random_username)
+    start_sauce_instance.enter_password()
     start_sauce_instance.click_on_login_button()
     return start_sauce_instance
 
