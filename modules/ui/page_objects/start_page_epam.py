@@ -6,7 +6,6 @@ import os
 
 
 class LocatorsStartEpamPage:
-    LOGO = (By.CSS_SELECTOR, "a.header__logo-container")
     CURRENT_THEME_BODY = (By.CLASS_NAME, 'fonts-loaded')
     THEME_SWITCHER = (By.CSS_SELECTOR, ".theme-switcher")
     LANGUAGE_BUTTON = (By.CLASS_NAME, 'location-selector__button')
@@ -22,7 +21,6 @@ class LocatorsStartEpamPage:
     FIND_BUTTON = (By.XPATH, "//span[@class='bth-text-layer' and contains(text(), 'Find')]")
     RESULT_COUNT = (By.CLASS_NAME, 'search-results__counter')
     SUBMIT_CONTACT_BUTTON = (By.XPATH, "//button[@class='button-ui']")
-    BUTTON = (By.CLASS_NAME, "button__content")
 
 
 class StartEpamPage(BasePage):
@@ -91,7 +89,7 @@ class StartEpamPage(BasePage):
         policies_links = [
             policies_item.text
             for policies_item in policies_items
-            ]
+        ]
         if footer_expected_text in policies_links:
             return True
         else:
@@ -196,8 +194,9 @@ class StartEpamPage(BasePage):
     def click_find_button(self):
         self.element_is_visible(self.locators.FIND_BUTTON).click()
 
-    def get_result_count_locator(self):
+    '''def get_result_count_locator(self):
         return By.CLASS_NAME, 'search-results__counter'
+    '''
 
     def verified_search_result(self):
         result_count_element = self.element_is_visible(self.locators.RESULT_COUNT)
@@ -206,82 +205,3 @@ class StartEpamPage(BasePage):
         result_count = int(result_count_text.split()[0])
         # return result_count
         print(result_count)
-
-    ''' def press_site_logo(self):
-        try:
-            logo = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable(self.locators.LOGO)
-            )
-            logo.click()
-            print(f"Logo clicked successfully.")
-
-        except Exception as e:
-            print(f"Error clicking on logo: {str(e)}")
-
-    def scroll_click_submit_button(self):
-        try:
-            submit_btn = self.driver.find_element(*self.locators.SUBMIT_CONTACT_BUTTON)
-            self.scroll_to_element(submit_btn)
-            submit_btn.click()
-
-        except Exception as e:
-            print(f"An error occurred: {str(e)}")
-
-    def validation_field(self, expected_name):
-        try:
-            required_label_locator = (By.XPATH, f"//label[contains(text(), '{expected_name}')]")
-            required_label = self.driver.find_element(*required_label_locator)
-
-            input_field_id = required_label.get_attribute("for")
-            input_field = self.driver.find_element(By.ID, input_field_id)
-
-            assert required_label.text.strip() == expected_name.strip()
-
-            assert input_field.get_attribute("aria-required") == "true"
-            print(f"Validation passed for field '{expected_name}': Field is marked as required")
-
-        except Exception as e:
-            print(f"Validation failed for field '{expected_name}': {str(e)}")
-
-    
-
-    def scroll_to(self, target_text):
-        scroll = self.driver.find_elements(*self.locators.SCROLL_TO)
-        scroll_element = None
-
-        for element in scroll:
-            if target_text in element.text:
-                scroll_element = element
-                break
-
-        if scroll_element:
-            self.driver.execute_script("arguments[0].scrollIntoView();", scroll_element)
-            print(f"Scrolled to {target_text} element successfully")
-        else:
-            print(f"{target_text} not found")
-
-    def click_on_button(self, button_name):
-        button = self.driver.find_elements(*self.locators.BUTTON)
-        button_element = None
-
-        for btn_element in button:
-            if button_name in btn_element.text:
-                button_element = btn_element
-                break
-
-        if button_element:
-            button_element.click()
-            print(f"Clicked on {button_name} button successfully")
-        else:
-            print(f"{button_name} not found")
-
-    def download_file(self):
-        home_dir = os.path.expanduser("~")
-        download_dir = os.path.join(home_dir, "Downloads")
-        print("Way for:", download_dir)
-
-        downloaded_files = os.listdir(download_dir)
-        expected_file = "EPAM_Corporate_Overview_Q3_october.pdf"
-
-        assert expected_file in downloaded_files, f"File {expected_file} not found in downloads directory"
-'''

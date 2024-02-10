@@ -51,7 +51,6 @@ def test_check_the_policies_list(start_page_epam_instance):
 def test_that_allow_to_switch_location_list_by_region(start_page_epam_instance):
     start_page_epam_instance.scroll_to_our_locations()
     start_page_epam_instance.check_locations_title()
-    start_page_epam_instance.click_locations("EMEA")
     start_page_epam_instance.click_locations("APAC")
     start_page_epam_instance.click_on_current_our_location("INDIA")
     start_page_epam_instance.check_locations_info("India", 5)
