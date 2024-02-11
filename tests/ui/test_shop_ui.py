@@ -44,13 +44,13 @@ def test_that_allows_sorting_items(start_demoshop_instance):
     start_demoshop_instance.fill_required_form_field("Password", "SAnewTest")
     start_demoshop_instance.open_category_with_subgroups("Desktops")
     start_demoshop_instance.sort_by_option("Price: Low to High")
-    start_demoshop_instance.verify_by_title()
+    start_demoshop_instance.assert_products_sorted_by_price()
     start_demoshop_instance.sort_by_option("Price: High to Low")
-    start_demoshop_instance.verify_by_title()
+    start_demoshop_instance.assert_products_sorted_by_price()
     start_demoshop_instance.sort_by_option("Name: Z to A")
-    start_demoshop_instance.verify_by_title()
+    start_demoshop_instance.assert_products_sorted_by_name()
     start_demoshop_instance.sort_by_option("Name: A to Z")
-    start_demoshop_instance.verify_by_title()
+    start_demoshop_instance.assert_products_sorted_by_name()
 
 @pytest.mark.demoshop
 def test_that_allows_changing_number_on_page(start_demoshop_instance):
@@ -61,20 +61,8 @@ def test_that_allows_changing_number_on_page(start_demoshop_instance):
     start_demoshop_instance.fill_required_form_field("Email", random_email)
     start_demoshop_instance.fill_required_form_field("Password", "SAnewTest")
     start_demoshop_instance.open_category_with_subgroups("Desktops")
-    start_demoshop_instance.sort_by_dispalays("4")
-    start_demoshop_instance.verify_pagination_and_items()
-    start_demoshop_instance.sort_by_dispalays("12")
-    start_demoshop_instance.verify_pagination_and_items()
+    start_demoshop_instance.sort_by_displays("4")
+    start_demoshop_instance.validate_pagination_and_displayed_items()
+    start_demoshop_instance.sort_by_displays("12")
+    start_demoshop_instance.validate_pagination_and_displayed_items()
 
-@pytest.mark.demoshop
-def test_that_allows_adding_an_item_to_the_card(start_demoshop_instance):
-    start_demoshop_instance.open_login_page()
-    with open('generated_emails.txt', 'r') as file:
-        generated_emails = file.readlines()
-    random_email = random.choice(generated_emails).strip()
-    start_demoshop_instance.fill_required_form_field("Email", random_email)
-    start_demoshop_instance.fill_required_form_field("Password", "SAnewTest")
-    start_demoshop_instance.click_menu_item("Books")
-
-
-    time.sleep(5)
