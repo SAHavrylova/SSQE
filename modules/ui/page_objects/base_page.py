@@ -8,19 +8,18 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class BasePage:
-    def __init__(self) -> None:
+    '''def __init__(self) -> None:
         self.driver = WebDriverSingleton().get_driver()
 
     def quit_driver(self):
         WebDriverSingleton._destroy_instance()
-
-    '''def __init__(self, driver, url):
-        self.driver = driver
-        self.url = url
-
-    def open(self):
-        self.driver.get(self.url)
     '''
+
+    def __init__(self, driver) -> None:
+        self.driver = driver
+
+    def quit_driver(self):
+        self.driver.quit()
 
     def title_is(self, locator, timeout = 5):
         return wait(self.driver, timeout).until(EC.title_is(locator))
@@ -60,12 +59,3 @@ class BasePage:
         action = ActionChains(self.driver)
         action.move_to_element(element)
         action.perform()
-
-
-
-    '''def make_screenshot(self, screenshot_name):
-        allure.attach(
-            body=self.driver.get_screenshot_as_png(),
-            name=screenshot_name,
-            attachment_type=AttachmentType.PNG
-        )'''

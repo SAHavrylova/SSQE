@@ -7,6 +7,7 @@
       <excludeFolder url="file://$MODULE_DIR$/data" />
       <excludeFolder url="file://$MODULE_DIR$/generator" />
       <excludeFolder url="file://$MODULE_DIR$/ssqe" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/allure_results" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -2,8 +2,6 @@ import logging
 
 from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import uuid
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
@@ -56,13 +54,17 @@ class StartShopPage(BasePage):
     URL = 'https://demowebshop.tricentis.com/'
     generated_emails = []
 
-    def __init__(self) -> None:
+    def __init__(self, driver) -> None:
+        super().__init__(driver)
+        self.locators = LocatorsStartShopPage()
+
+    ''' def __init__(self) -> None:
         super().__init__()
         self.locators = LocatorsStartShopPage()
-    
+    '''
     def go_to_shop(self):
         self.driver.get(StartShopPage.URL)
-    
+
     def open_register_page(self):
         self.element_is_visible(self.locators.REGISTER_BUTTON).click()
     
