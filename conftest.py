@@ -12,15 +12,25 @@ from modules.ui.page_objects.start_page_epam import StartEpamPage
 from utils.webdriver_singleton import WebDriverSingleton
 
 
-@pytest.fixture(scope = "module")
+'''@pytest.fixture(scope = "module")
 def driver():
     driver = WebDriverSingleton()
     driver.maximize_window()
     yield driver.get_driver()
-    ''' attach = driver.get_screenshot_as_png()
+    attach = driver.get_screenshot_as_png()
     allure.attach(attach, name = f"Screenshot {datetime.today()}", attachment_type = allure.attachment_type.PNG)
-    '''
     driver.quit_driver()
+'''
+
+
+@pytest.fixture(scope = "function")
+def start_demoshop_instance():
+    shop_page = StartShopPage()
+    shop_page.go_to_shop()
+
+    yield shop_page
+
+    shop_page.quit_driver()
 
 
 @pytest.fixture(scope = "module")
@@ -51,16 +61,6 @@ def contact_page_epam_instance():
     yield contact_page
 
     contact_page.quit_driver()
-
-
-@pytest.fixture(scope = "function")
-def start_demoshop_instance(driver):
-    shop_page = StartShopPage(driver)
-    shop_page.go_to_shop()
-
-    yield shop_page
-
-    shop_page.quit_driver()
 
 
 @pytest.fixture(scope = "module")

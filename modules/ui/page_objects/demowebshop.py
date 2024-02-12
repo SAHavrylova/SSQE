@@ -1,5 +1,7 @@
 import logging
 
+import allure
+
 from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
 import uuid
@@ -54,17 +56,19 @@ class StartShopPage(BasePage):
     URL = 'https://demowebshop.tricentis.com/'
     generated_emails = []
 
-    def __init__(self, driver) -> None:
+    '''def __init__(self, driver) -> None:
         super().__init__(driver)
         self.locators = LocatorsStartShopPage()
+    '''
 
-    ''' def __init__(self) -> None:
+    def __init__(self) -> None:
         super().__init__()
         self.locators = LocatorsStartShopPage()
-    '''
+
     def go_to_shop(self):
         self.driver.get(StartShopPage.URL)
 
+    @allure.step("Open register page")
     def open_register_page(self):
         self.element_is_visible(self.locators.REGISTER_BUTTON).click()
     

@@ -5,11 +5,11 @@ import random
 
 @allure.suite("DemoShop")
 class TestDemoShop:
-    @allure.feature("SignUP")
-    class TestSignUP:
-        @allure.title("Check sign up")
+    @allure.feature("User Registration")
+    class TestUserRegistration:
+        @allure.title("Verify user registration functionality")
         @pytest.mark.demoshop
-        def test_that_allows_sign_up(self, start_demoshop_instance):
+        def test_user_registration(self, start_demoshop_instance):
             start_demoshop_instance.open_register_page()
             start_demoshop_instance.fill_required_form_field("FirstName", "SA")
             start_demoshop_instance.fill_required_form_field("LastName", "Test")
@@ -23,8 +23,11 @@ class TestDemoShop:
             start_demoshop_instance.submit_register_form()
             start_demoshop_instance.registration_result("Your registration completed")
 
+    @allure.feature("User Authentication")
+    class TestUserAuthentication:
+        @allure.title("Verify login functionality")
         @pytest.mark.demoshop
-        def test_that_allows_login(self, start_demoshop_instance):
+        def test_user_login(self, start_demoshop_instance):
             start_demoshop_instance.open_login_page()
             with open('generated_emails.txt', 'r') as file:
                 generated_emails = file.readlines()
@@ -34,12 +37,16 @@ class TestDemoShop:
             start_demoshop_instance.submit_login_form()
             start_demoshop_instance.verify_logout_text("Log out")
 
+    @allure.feature("Main Page")
+    class TestSMainPage:
+        @allure.title("Verify number of computer subgroups")
         @pytest.mark.demoshop
-        def test_verify_that_computers_have_3_subgroups(self, start_demoshop_instance):
+        def test_verify_number_of_computer_subgroups(self, start_demoshop_instance):
             start_demoshop_instance.verify_computers_sub_groups()
 
+        @allure.title("Verify sorting functionality")
         @pytest.mark.demoshop
-        def test_that_allows_sorting_items(self, start_demoshop_instance):
+        def test_verify_sorting_functionality(self, start_demoshop_instance):
             start_demoshop_instance.open_login_page()
             with open('generated_emails.txt', 'r') as file:
                 generated_emails = file.readlines()
@@ -56,8 +63,9 @@ class TestDemoShop:
             start_demoshop_instance.sort_by_option("Name: A to Z")
             start_demoshop_instance.assert_products_sorted_by_name()
 
+        @allure.title("Verify changing number of items per page")
         @pytest.mark.demoshop
-        def test_that_allows_changing_number_on_page(self, start_demoshop_instance):
+        def test_verify_changing_number_of_items_per_page(self, start_demoshop_instance):
             start_demoshop_instance.open_login_page()
             with open('generated_emails.txt', 'r') as file:
                 generated_emails = file.readlines()

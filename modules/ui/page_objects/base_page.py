@@ -8,19 +8,19 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class BasePage:
-    '''def __init__(self) -> None:
+    def __init__(self) -> None:
         self.driver = WebDriverSingleton().get_driver()
+        self.driver.maximize_window()
 
     def quit_driver(self):
         WebDriverSingleton._destroy_instance()
-    '''
 
-    def __init__(self, driver) -> None:
+    '''def __init__(self, driver) -> None:
         self.driver = driver
 
     def quit_driver(self):
         self.driver.quit()
-
+    '''
     def title_is(self, locator, timeout = 5):
         return wait(self.driver, timeout).until(EC.title_is(locator))
 

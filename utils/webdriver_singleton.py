@@ -8,7 +8,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 class WebDriverSingleton:
     _instance = None
 
-    def __new__(cls, browser = "chrome"):
+    def __new__(cls, browser = "firefox"):
         if cls._instance is None:
             cls._instance = super(WebDriverSingleton, cls).__new__(cls)
             if browser.lower() == "chrome":
@@ -17,6 +17,8 @@ class WebDriverSingleton:
                 cls._instance.driver = cls._init_firefox_driver()
             else:
                 raise ValueError(f"Unsupported browser: {browser}")
+
+            cls._instance.driver.maximize_window()
 
         return cls._instance
 
