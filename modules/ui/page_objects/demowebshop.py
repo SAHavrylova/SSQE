@@ -52,7 +52,6 @@ class LocatorsStartShopPage:
 
 
 class StartShopPage(BasePage):
-
     URL = 'https://demowebshop.tricentis.com/'
     generated_emails = []
 
@@ -65,13 +64,15 @@ class StartShopPage(BasePage):
         super().__init__()
         self.locators = LocatorsStartShopPage()
 
+    @allure.step("Navigate to the shop page")
     def go_to_shop(self):
         self.driver.get(StartShopPage.URL)
 
     @allure.step("Open register page")
     def open_register_page(self):
         self.element_is_visible(self.locators.REGISTER_BUTTON).click()
-    
+
+    @allure.step("Fill in the required form field")
     def fill_required_form_field(self, input_name, signup_text):
         try:
             if input_name in self.locators.REQUIRED_FIELDS:
@@ -80,19 +81,22 @@ class StartShopPage(BasePage):
                 return field_element
             else:
                 print(f"{input_name} not found")
-            
+
         except Exception as e:
             print(f"Error filling required field: {str(e)}")
-    
+
+    @allure.step("Generate email address")
     def generate_email(self):
         unique_id = str(uuid.uuid4())[:8]
         generated_email = f"sa{unique_id}@test.new.com"
         self.generated_emails.append(generated_email)
         return generated_email
 
+    @allure.step("Submit registration form")
     def submit_register_form(self):
         self.element_is_visible(self.locators.SUBMIT_REGISTER_BUTTON).click()
 
+    @allure.step("Clear all input fields")
     def clear_all_input_fields(self):
         try:
             for input_name, locator in self.locators.REQUIRED_FIELDS.items():
@@ -102,20 +106,25 @@ class StartShopPage(BasePage):
         except Exception as e:
             print(f"Error clearing input fields: {str(e)}")
 
+    @allure.step("Check registration result")
     def registration_result(self, result_text):
         actual_result = self.element_is_visible(self.locators.SIGNUP_RESULT).text
         return actual_result == result_text
 
+    @allure.step("Open the login page")
     def open_login_page(self):
         self.element_is_visible(self.locators.LOGIN_BUTTON).click()
-    
+
+    @allure.step("Submit the login page")
     def submit_login_form(self):
         self.element_is_visible(self.locators.SUBMIT_LOGIN_BUTTON).click()
 
+    @allure.step("Verify logout text")
     def verify_logout_text(self, expected_text):
         actual_result = self.element_is_visible(self.locators.LOGOUT_BUTTON).text
         return actual_result == expected_text
 
+    @allure.step("Verify computers subgroups")
     def verify_computers_sub_groups(self):
         computers_tab = self.element_is_present(self.locators.COMPUTERS_TAB)
         self.action_move_to_element(computers_tab)
@@ -129,11 +138,12 @@ class StartShopPage(BasePage):
         expected_categories = ["Desktops", "Notebooks", "Accessories"]
         assert sub_categories == expected_categories
 
+    @allure.step("Click menu item")
     def click_menu_item(self, choose_categories_element):
         try:
             category_element = self.driver.find_element(By.XPATH, f'//a[contains(text(),'
                                                                   f'"{choose_categories_element}")]')
-        
+
             actions = ActionChains(self.driver)
             actions.move_to_element(category_element).click().perform()
             return True
@@ -141,6 +151,7 @@ class StartShopPage(BasePage):
         except Exception as e:
             print("Error while clicking:", e)
 
+    @allure.step("Open category with subgroups")
     def open_category_with_subgroups(self, sub_groups_name):
         computers_tab = self.element_is_present(self.locators.COMPUTERS_TAB)
         self.action_move_to_element(computers_tab)
@@ -152,7 +163,8 @@ class StartShopPage(BasePage):
             if item.text == sub_groups_name:
                 item.click()
                 break
-    
+
+    @allure.step("Sort by option")
     def sort_by_option(self, choose_sort):
         self.element_is_visible(self.locators.SORT_BY).click()
         sort_list = self.element_is_clickable(self.locators.SORT_BY)
@@ -160,7 +172,8 @@ class StartShopPage(BasePage):
         select.select_by_visible_text(choose_sort)
         return True
 
-    def assert_products_sorted_by_name(self):
+    @allure.step("Verify products are sorted by name")
+    def verify_products_sorted_by_name(self):
         product_grid = self.element_is_present(self.locators.PRODUCT_GRID)
         product_items = product_grid.find_elements(*self.locators.PRODUCT_ITEMS)
 
@@ -170,24 +183,26 @@ class StartShopPage(BasePage):
 
             return title, "Products are not sorted by name"
 
-    def assert_products_sorted_by_price(self):
+    @allure.step("Verify products are sorted by price")
+    def verify_products_sorted_by_price(self):
         product_grid = self.element_is_present(self.locators.PRODUCT_GRID)
         product_items = product_grid.find_elements(*self.locators.PRODUCT_ITEMS)
 
         for item in product_items:
-
             price_element = item.find_element(*self.locators.PRICE)
             price = float(price_element.text.replace("$", ""))
 
             return price, "Products are not sorted by name and price"
-    
-    def sort_by_displays(self, choose_page_size):
+
+    @allure.step("Sort products by display type")
+    def sort_products_by_display_type(self, choose_page_size):
         self.element_is_visible(self.locators.DISPLAY_BY).click()
         display_list = self.element_is_clickable(self.locators.DISPLAY_BY)
         select = Select(display_list)
         select.select_by_visible_text(choose_page_size)
         return True
-    
+
+    @allure.step("Validate pagination and displayed items")
     def validate_pagination_and_displayed_items(self):
         self.driver.find_elements(*self.locators.DISPLAY_PAGER)
 
@@ -197,4 +212,3 @@ class StartShopPage(BasePage):
             logging.info(f"Number of items per page is correct: {items_count}")
         else:
             logging.warning("No items found on the page")
-
