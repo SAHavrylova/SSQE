@@ -1,0 +1,2 @@
+[31m[1mERROR   [0m root:saucedemo.py:194 Error while sorting: BasePage.click_element() takes 2 positional arguments but 3 were given
+[31m[1mERROR   [0m root:saucedemo.py:194 Error while sorting: BasePage.click_element() takes 2 positional arguments but 3 were given

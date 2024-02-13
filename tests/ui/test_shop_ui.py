@@ -38,7 +38,7 @@ class TestDemoShop:
             start_demoshop_instance.verify_logout_text("Log out")
 
     @allure.feature("Main Page")
-    class TestSMainPage:
+    class TestMainPage:
         @allure.title("Verify number of computer subgroups")
         @pytest.mark.demoshop
         def test_verify_number_of_computer_subgroups(self, start_demoshop_instance):

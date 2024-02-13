@@ -33,7 +33,7 @@ def start_demoshop_instance():
     shop_page.quit_driver()
 
 
-@pytest.fixture(scope = "module")
+@pytest.fixture(scope = "function")
 def start_page_epam_instance():
     start_page = StartEpamPage()
     start_page.go_to_epam()
@@ -43,7 +43,7 @@ def start_page_epam_instance():
     start_page.quit_driver()
 
 
-@pytest.fixture(scope = "module")
+@pytest.fixture(scope = "function")
 def about_page_epam_instance():
     about_page = AboutEpamPage()
     about_page.go_to_about()
@@ -53,7 +53,7 @@ def about_page_epam_instance():
     about_page.quit_driver()
 
 
-@pytest.fixture(scope = "module")
+@pytest.fixture(scope = "function")
 def contact_page_epam_instance():
     contact_page = ContactEpamPage()
     contact_page.go_to_contact()
@@ -63,7 +63,7 @@ def contact_page_epam_instance():
     contact_page.quit_driver()
 
 
-@pytest.fixture(scope = "module")
+@pytest.fixture(scope = "function")
 def start_sauce_instance():
     sauce_page = StartSaucedemo()
     sauce_page.go_to_saucedemo()

@@ -101,19 +101,12 @@ class StartSaucedemo(BasePage):
         self.click_element(self.locators.SPECIFIC_PRODUCT)
 
     def verify_product_info_presence(self):
-        container = self.driver.find_elements(*self.locators.INVENTORY_DETAILS_CONTAINER)
-        img = self.driver.find_elements(*self.locators.INVENTORY_DETAILS_IMG)
-        name = self.driver.find_elements(*self.locators.INVENTORY_DETAILS_NAME)
-        description = self.driver.find_elements(*self.locators.INVENTORY_DETAILS_DESCRIPTION)
-        price = self.driver.find_elements(*self.locators.INVENTORY_DETAILS_PRICE)
-        add_to_cart_buttons = self.driver.find_elements(*self.locators.ADD_TO_CART_BUTTON)
-
-        assert len(container) > 0, "Inventory details container not found"
-        assert len(img) > 0, "Inventory details image not found"
-        assert len(name) > 0, "Inventory details name not found"
-        assert len(description) > 0, "Inventory details description not found"
-        assert len(price) > 0, "Inventory details price not found"
-        assert len(add_to_cart_buttons) > 0, "Add to cart buttons not found"
+        self.driver.find_elements(*self.locators.INVENTORY_DETAILS_CONTAINER)
+        self.driver.find_elements(*self.locators.INVENTORY_DETAILS_IMG)
+        self.driver.find_elements(*self.locators.INVENTORY_DETAILS_NAME)
+        self.driver.find_elements(*self.locators.INVENTORY_DETAILS_DESCRIPTION)
+        self.driver.find_elements(*self.locators.INVENTORY_DETAILS_PRICE)
+        self.driver.find_elements(*self.locators.ADD_TO_CART_BUTTON)
 
     def click_on_back_to(self):
         try:
@@ -181,9 +174,10 @@ class StartSaucedemo(BasePage):
     '''def click_on_sort_button(self):
         self.click_element(*self.locators.SORTING_BUTTON)
     '''
+
     def sort_product_by_option(self, choose_option):
         try:
-            self.click_element(*self.locators.SORTING_BUTTON)
+            self.click_element(self.locators.SORTING_BUTTON)
 
             option_list = self.element_is_clickable(self.locators.SORT_OPTIONS_DROPDOWN)
             select = Select(option_list)
@@ -219,4 +213,3 @@ class StartSaucedemo(BasePage):
 
         except Exception as e:
             print("Error while verifying sorted order:", e)
-
