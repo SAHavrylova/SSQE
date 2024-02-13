@@ -1,3 +1,5 @@
+import allure
+
 from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -20,16 +22,20 @@ class AboutEpamPage(BasePage):
         super().__init__()
         self.locators = LocatorsAboutEpamPage()
 
+    @allure.step("Navigate to the 'About' page")
     def go_to_about(self):
         self.driver.get(AboutEpamPage.URL_about)
 
-    def check_epam_title(self, exp_title):
+    @allure.step("Check the title of the EPAM page")
+    def check_epam_page_title(self, exp_title):
         epam_title = self.title_is(exp_title)
         return epam_title
 
+    @allure.step("Press the site logo")
     def press_site_logo(self):
         self.element_is_visible(self.locators.LOGO).click()
 
+    @allure.step("Scroll to the visible element")
     def scroll_to_visible_element(self, target_text):
         '''scroll_element = self.driver.find_element(*self.locators.TEXT_ELEMENT)
         if scroll_element and target_text in scroll_element.text:
@@ -47,6 +53,7 @@ class AboutEpamPage(BasePage):
         if scroll_element:
             self.driver.execute_script("arguments[0].scrollIntoView();", scroll_element)
 
+    @allure.step("Click a specific button")
     def click_specific_button(self, button_name):
         button = self.driver.find_elements(*self.locators.SPECIFIC_BUTTON)
         button_element = None
@@ -59,6 +66,7 @@ class AboutEpamPage(BasePage):
         if button_element:
             button_element.click()
 
+    @allure.step("Download the document")
     def download_document(self):
         home_dir = os.path.expanduser("~")
         download_dir = os.path.join(home_dir, "Downloads")

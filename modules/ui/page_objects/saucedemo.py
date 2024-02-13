@@ -1,5 +1,7 @@
 import random
 import logging
+import allure
+
 from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -59,22 +61,28 @@ class StartSaucedemo(BasePage):
         super().__init__()
         self.locators = LocatorsStartSauceDemoShop()
 
+    @allure.step("")
     def go_to_saucedemo(self):
         self.driver.get(StartSaucedemo.URL)
 
+    @allure.step("")
     def enter_username(self, username):
         self.element_is_visible(self.locators.USERNAME_FIELD).send_keys(username)
 
+    @allure.step("")
     def enter_password(self):
         self.element_is_visible(self.locators.PASSWORD_FIELD).send_keys("secret_sauce")
 
+    @allure.step("")
     def click_on_login_button(self):
         self.element_is_visible(self.locators.LOGIN_BUTTON).click()
 
+    @allure.step("")
     def check_saucedemo_title(self, exp_title):
         saucedemo_title = self.title_is(exp_title)
         return saucedemo_title
 
+    @allure.step("")
     def verify_all_products(self):
         all_products = [
             "Sauce Labs Backpack",
@@ -97,9 +105,11 @@ class StartSaucedemo(BasePage):
 
         return True
 
+    @allure.step("")
     def click_on_specific_product(self):
         self.click_element(self.locators.SPECIFIC_PRODUCT)
 
+    @allure.step("")
     def verify_product_info_presence(self):
         self.driver.find_elements(*self.locators.INVENTORY_DETAILS_CONTAINER)
         self.driver.find_elements(*self.locators.INVENTORY_DETAILS_IMG)
@@ -108,12 +118,14 @@ class StartSaucedemo(BasePage):
         self.driver.find_elements(*self.locators.INVENTORY_DETAILS_PRICE)
         self.driver.find_elements(*self.locators.ADD_TO_CART_BUTTON)
 
+    @allure.step("")
     def click_on_back_to(self):
         try:
             self.click_element(self.locators.BACK_TO_PRODUCTS_BUTTON)
         except Exception as e:
             print(f"An error occurred while clicking on 'Back to products': {str(e)}")
 
+    @allure.step("")
     def add_to_cart(self, item_name):
         try:
             inventory_items = self.element_are_present(self.locators.PRODUCT_DESCRIPTION)
@@ -129,13 +141,16 @@ class StartSaucedemo(BasePage):
         except Exception as e:
             print(f"An error occurred: {str(e)}")
 
+    @allure.step("")
     @staticmethod
     def get_added_items():
         return StartSaucedemo.added_items
 
+    @allure.step("")
     def open_shopping_cart(self):
         self.element_is_visible(self.locators.SHOPPING_CART_ICON).click()
 
+    @allure.step("")
     def verify_added_items_in_cart(self):
         try:
             cart_items = self.driver.find_elements(By.CLASS_NAME, 'inventory_item_name')
@@ -149,32 +164,36 @@ class StartSaucedemo(BasePage):
         except Exception as e:
             print(f"An error occurred while verifying items in the cart: {str(e)}")
 
+    @allure.step("")
     def click_on_checkout_button(self):
         self.element_is_visible(self.locators.CHECKOUT_BUTTON).click()
 
+    @allure.step("")
     def verify_checkout_information(self, checkout_info_text):
         checkout_title = self.element_is_visible(self.locators.CHECKOUT_TITLE).text
         return checkout_title == checkout_info_text
 
+    @allure.step("")
     def enter_firstname(self, first_name):
         self.element_is_visible(self.locators.FIRST_NAME_FIELD).send_keys(first_name)
 
+    @allure.step("")
     def enter_lastname(self, last_name):
         self.element_is_visible(self.locators.LAST_NAME_FIELD).send_keys(last_name)
 
+    @allure.step("")
     def enter_postal_code(self, postal_code):
         self.element_is_visible(self.locators.POSTAL_CODE).send_keys(postal_code)
 
+    @allure.step("")
     def click_on_continue_button(self):
         self.click_element(self.locators.CONTINUE_CHECKOUT_BUTTON)
 
+    @allure.step("")
     def click_on_finish_button(self):
         self.click_element(self.locators.FINISH_ORDER_BUTTON)
 
-    '''def click_on_sort_button(self):
-        self.click_element(*self.locators.SORTING_BUTTON)
-    '''
-
+    @allure.step("")
     def sort_product_by_option(self, choose_option):
         try:
             self.click_element(self.locators.SORTING_BUTTON)
@@ -188,6 +207,7 @@ class StartSaucedemo(BasePage):
             logging.error("Error while sorting: %s", e)
             return False
 
+    @allure.step("")
     def verify_sorted_order_by_name(self):
         try:
             inventory_list = self.element_is_present(self.locators.INVENTORY_LIST)
@@ -201,6 +221,7 @@ class StartSaucedemo(BasePage):
         except Exception as e:
             print("Error while verifying sorted order:", e)
 
+    @allure.step("")
     def verify_sorted_order_by_price(self):
         try:
             inventory_list = self.element_is_present(self.locators.INVENTORY_LIST)

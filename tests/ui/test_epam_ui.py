@@ -13,7 +13,7 @@ class TestEPAM:
         @pytest.mark.epamui
         def test_verify_page_title_is_correct(self, start_page_epam_instance):
             # Compare the title
-            assert start_page_epam_instance.check_epam_title(
+            assert start_page_epam_instance.check_epam_page_title(
                 "EPAM | Software Engineering & Product Development Services")
 
         @allure.title("Verify the ability to switch themes")
@@ -30,7 +30,7 @@ class TestEPAM:
             start_page_epam_instance.get_language()
             start_page_epam_instance.change_language_to_ua()
 
-            assert start_page_epam_instance.check_epam_title(
+            assert start_page_epam_instance.check_epam_page_title(
                 "EPAM Ukraine - найбільша ІТ-компанія в Україні | Вакансії")
 
             start_page_epam_instance.check_header_title("ВАКАНСІЇ")
@@ -75,7 +75,7 @@ class TestEPAM:
         @allure.title("Verify form fields validation")
         @pytest.mark.epamui
         def test_verify_form_fields_validation(self, contact_page_epam_instance):
-            contact_page_epam_instance.scroll_click_submit_button()
+            contact_page_epam_instance.scroll_to_and_click_submit_button()
             fields_to_validate = [
                 "Select the Reason for Your Inquiry*",
                 "Last Name*",
@@ -85,7 +85,7 @@ class TestEPAM:
                 "How did you hear about EPAM?*"
             ]
             for expected_name in fields_to_validate:
-                contact_page_epam_instance.validation_field(expected_name)
+                contact_page_epam_instance.validate_form_field(expected_name)
 
     @allure.feature("About Page")
     class TestAboutPage:
@@ -93,7 +93,7 @@ class TestEPAM:
         @pytest.mark.epamui
         def test_verify_logo_leads_to_main_page(self, about_page_epam_instance):
             about_page_epam_instance.press_site_logo()
-            assert about_page_epam_instance.check_epam_title(
+            assert about_page_epam_instance.check_epam_page_title(
                 "EPAM | Software Engineering & Product Development Services")
 
         @allure.title("Verify the ability to download report")

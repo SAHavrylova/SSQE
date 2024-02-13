@@ -1,3 +1,5 @@
+import allure
+
 from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,19 +19,23 @@ class ContactEpamPage(BasePage):
         super().__init__()
         self.locators = LocatorsContactEpamPage()
 
-    def go_to_contact(self):
+    @allure.step("Navigate to the contact page")
+    def go_to_contact_page(self):
         self.driver.get(ContactEpamPage.URL_contact)
 
-    def scroll_to_element(self, element):
+    @allure.step("Scroll to the specified element")
+    def scroll_to_specified_element(self, element):
         script = "arguments[0].scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });"
         self.driver.execute_script(script, element)
 
-    def scroll_click_submit_button(self):
+    @allure.step("Scroll to and click the submit butto")
+    def scroll_to_and_click_submit_button(self):
         submit_btn = self.driver.find_element(*self.locators.SUBMIT_CONTACT_BUTTON)
-        self.scroll_to_element(submit_btn)
+        self.scroll_to_specified_element(submit_btn)
         submit_btn.click()
 
-    def validation_field(self, expected_name):
+    @allure.step("Validate form field")
+    def validate_form_field(self, expected_name):
         required_label_locator = (By.XPATH, f"//label[contains(text(), '{expected_name}')]")
         required_label = self.driver.find_element(*required_label_locator)
 

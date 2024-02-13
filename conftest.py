@@ -56,7 +56,7 @@ def about_page_epam_instance():
 @pytest.fixture(scope = "function")
 def contact_page_epam_instance():
     contact_page = ContactEpamPage()
-    contact_page.go_to_contact()
+    contact_page.go_to_contact_page()
 
     yield contact_page
 
