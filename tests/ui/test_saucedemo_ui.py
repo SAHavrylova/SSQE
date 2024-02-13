@@ -29,7 +29,7 @@ class TestSaucedemo:
             start_sauce_instance.enter_username("standard_user")
             start_sauce_instance.enter_password()
             start_sauce_instance.click_on_login_button()
-            start_sauce_instance.verify_all_products()
+            start_sauce_instance.verify_all_products_displayed()
 
         @allure.title("Verify opening product page")
         @pytest.mark.sauce
@@ -40,7 +40,7 @@ class TestSaucedemo:
             start_sauce_instance.click_on_specific_product()
             start_sauce_instance.verify_product_info_presence()
 
-            start_sauce_instance.click_on_back_to()
+            start_sauce_instance.click_on_back_to_button()
 
         @allure.title("Verify sorting products by name")
         @pytest.mark.sauce
@@ -72,8 +72,8 @@ class TestSaucedemo:
             start_sauce_instance.enter_username("standard_user")
             start_sauce_instance.enter_password()
             start_sauce_instance.click_on_login_button()
-            start_sauce_instance.add_to_cart("Sauce Labs Bike Light")
-            start_sauce_instance.add_to_cart("Sauce Labs Fleece Jacket")
+            start_sauce_instance.add_product_to_cart("Sauce Labs Bike Light")
+            start_sauce_instance.add_product_to_cart("Sauce Labs Fleece Jacket")
             start_sauce_instance.open_shopping_cart()
             start_sauce_instance.verify_added_items_in_cart()
 
@@ -83,8 +83,8 @@ class TestSaucedemo:
             start_sauce_instance.enter_username("standard_user")
             start_sauce_instance.enter_password()
             start_sauce_instance.click_on_login_button()
-            start_sauce_instance.add_to_cart("Sauce Labs Bike Light")
-            start_sauce_instance.add_to_cart("Sauce Labs Fleece Jacket")
+            start_sauce_instance.add_product_to_cart("Sauce Labs Bike Light")
+            start_sauce_instance.add_product_to_cart("Sauce Labs Fleece Jacket")
             start_sauce_instance.open_shopping_cart()
             start_sauce_instance.verify_added_items_in_cart()
             start_sauce_instance.click_on_checkout_button()
